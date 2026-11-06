@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Pendant Lab v2 · CC Notes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&family=IM+Fell+English+SC&family=Homemade+Apple&display=swap" rel="stylesheet">
+<style>
+/* Layout: workbench. 3D view and mm grid side by side on laptop, stacked on phone, controls below in drawers. */
+:root{
+  --bg:#E2DACB; --paper:#EDE6D8; --ink:#3A2A20; --soft:#6A5A4C; --line:#B9AC98;
+  --blue:#6F8096; --sea:#93A6A5; --cocoa:#4E3829; --red:#A14A3B; --gold:#C9A55C;
+  --stage:#6F8096; --grid:#C9BFAE; --grid5:#A3957F;
+  --display:'IM Fell English SC', Georgia, serif;
+  --mono:'Cutive Mono', 'Courier New', monospace;
+  --hand:'Homemade Apple', cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#2B221B; --paper:#352A22; --ink:#EDE6D8; --soft:#BBAE9C; --line:#5C4C3E;
+  --blue:#8496AB; --sea:#93A6A5; --cocoa:#1F1813; --red:#E0A595; --gold:#D8BA74;
+  --stage:#3E4B5C; --grid:#4A3D32; --grid5:#6A5947; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#2B221B; --paper:#352A22; --ink:#EDE6D8; --soft:#BBAE9C; --line:#5C4C3E;
+  --blue:#8496AB; --sea:#93A6A5; --cocoa:#1F1813; --red:#E0A595; --gold:#D8BA74;
+  --stage:#3E4B5C; --grid:#4A3D32; --grid5:#6A5947; color-scheme:dark}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--mono);font-size:14px;line-height:1.5}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 40px;display:flex;flex-direction:column;gap:12px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px}
+h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(28px,4vw,40px);line-height:1.05;text-wrap:balance}
+.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--red)}
+.hand{font-family:var(--hand);font-size:14px;color:var(--blue)}
+.bench{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:12px}
+@media (max-width:820px){.bench{grid-template-columns:minmax(0,1fr)}.stage{height:360px;min-height:0}.gridbox{height:320px;min-height:0}}
+.panel{background:var(--paper);border:1px solid var(--line);position:relative;min-width:0}
+.stage{height:min(62vh,520px);min-height:300px;background:var(--stage);position:relative;overflow:hidden}
+.stage canvas{display:block;width:100%;height:100%;touch-action:none}
+.tag{position:absolute;left:10px;bottom:8px;font-size:11px;letter-spacing:.1em;color:#EDE6D8;pointer-events:none}
+.views{position:absolute;right:8px;top:8px;display:flex;gap:6px}
+.views button{background:rgba(237,230,216,.88);color:#3A2A20;border:0;min-height:36px;padding:0 10px;font-family:var(--mono);font-size:12px;cursor:pointer}
+.gridbox{height:min(62vh,520px);min-height:300px;position:relative;overflow:hidden}
+.gridbox svg{width:100%;height:100%;display:block;touch-action:none;user-select:none}
+.read{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.read div{background:var(--paper);padding:8px 10px;display:flex;flex-direction:column;min-width:0}
+.read span:first-child{font-size:10.5px;letter-spacing:.12em;color:var(--soft)}
+.read b{font-weight:400;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:520px){.read{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:start}
+@media (max-width:980px){.controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.controls{grid-template-columns:minmax(0,1fr)}}
+fieldset{margin:0;border:1px solid var(--line);background:var(--paper);padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+legend{font-family:var(--display);font-size:20px;padding:0 4px}
+.row{display:grid;grid-template-columns:96px minmax(0,1fr) 58px;align-items:center;gap:8px}
+.row label{font-size:12px;color:var(--soft)}
+.row output{font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--cocoa);height:28px;margin:0}
+select,input[type=file]{font-family:var(--mono);font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:0;min-height:40px;padding:0 8px;width:100%;box-sizing:border-box;max-width:100%}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+button.b{font-family:var(--mono);font-size:12.5px;min-height:40px;padding:0 12px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;border-radius:0}
+button.b[aria-pressed="true"],button.b.on{background:var(--cocoa);color:#EDE6D8;border-color:var(--cocoa)}
+button.b.main{background:var(--cocoa);color:#EDE6D8;border-color:var(--cocoa)}
+button.b:disabled{opacity:.4;cursor:default}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.note{font-size:12px;color:var(--soft);margin:0}
+.msg{font-size:12.5px;color:var(--red);min-height:1.2em;margin:0}
+.chk{display:flex;align-items:center;gap:8px;font-size:12.5px;min-height:32px}
+.chk input{width:18px;height:18px;accent-color:var(--cocoa)}
+.names{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.names div{border-top:1px solid var(--line);padding-top:8px;font-size:12.5px}
+.names b{font-family:var(--display);font-weight:400;font-size:18px;display:block}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div style="display:flex;flex-direction:column;gap:2px">
+    <span class="eyebrow">BARE STORIES · PENDANT LAB · V2</span>
+    <h1 id="shapeTitle">Ogee lozenge</h1>
+  </div>
+  <span class="hand">drag the dots, the gold follows</span>
+</header>
+
+<div class="read" aria-live="polite">
+  <div><span>PLATE H × W</span><b id="rSize">–</b></div>
+  <div><span>WITH BAIL</span><b id="rTotal">–</b></div>
+  <div><span>THICKNESS</span><b id="rThick">–</b></div>
+  <div><span id="rWeightL">WEIGHT · 14K</span><b id="rWeight">–</b></div>
+</div>
+
+<div class="bench">
+  <div class="panel stage" id="stage">
+    <div class="views">
+      <button type="button" data-view="front">Front</button>
+      <button type="button" data-view="side">Side</button>
+      <button type="button" data-view="angle">Angle</button>
+    </div>
+    <span class="tag" id="stageTag">3D VIEW · DRAG TO TURN</span>
+  </div>
+  <div class="panel gridbox">
+    <svg id="grid" role="img" aria-label="Millimetre grid with the pendant outline and draggable points"></svg>
+    <span class="tag" style="color:var(--soft)">GRID · 1 SQUARE = 1 MM · TAP A DOT, DRAG IT</span>
+  </div>
+</div>
+
+<div class="controls">
+  <fieldset>
+    <legend>Shape</legend>
+    <div class="row" style="grid-template-columns:96px minmax(0,1fr)"><label for="preset">Start from</label>
+      <select id="preset"></select></div>
+    <div class="btns">
+      <button type="button" class="b" id="addPt">Add dot</button>
+      <button type="button" class="b" id="delPt">Remove dot</button>
+      <button type="button" class="b" id="sharpPt" aria-pressed="false">Sharp point</button>
+      <button type="button" class="b" id="symBtn" aria-pressed="true">Mirror sides</button>
+    </div>
+    <p class="note" id="selNote">Tap a dot on the grid to pick it.</p>
+    <div class="row"><label for="height">Height</label><input type="range" id="height" min="5" max="35" step="0.1"><output id="heightO"></output></div>
+    <div class="row"><label for="width">Width</label><input type="range" id="width" min="3" max="30" step="0.1"><output id="widthO"></output></div>
+    <div class="row"><label for="wobble">Organic</label><input type="range" id="wobble" min="0" max="0.4" step="0.01"><output id="wobbleO"></output></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Depth and edges</legend>
+    <div class="row"><label for="thick">Thickness</label><input type="range" id="thick" min="0.6" max="3" step="0.05"><output id="thickO"></output></div>
+    <div class="row"><label for="round">Edge round</label><input type="range" id="round" min="0" max="1.2" step="0.02"><output id="roundO"></output></div>
+    <div class="row"><label for="tilt">Edge tilt</label><input type="range" id="tilt" min="0.3" max="2.5" step="0.05"><output id="tiltO"></output></div>
+    <div class="row"><label for="soft">Edge shape</label><input type="range" id="soft" min="1" max="8" step="1"><output id="softO"></output></div>
+    <label class="chk"><input type="checkbox" id="rimOn"> Raised rim, sunken blank middle</label>
+    <div class="row"><label for="rimW">Rim width</label><input type="range" id="rimW" min="0.3" max="1.6" step="0.05"><output id="rimWO"></output></div>
+    <div class="row"><label for="rimH">Rim height</label><input type="range" id="rimH" min="0.1" max="0.8" step="0.02"><output id="rimHO"></output></div>
+    <label class="chk"><input type="checkbox" id="frameOn"> Second inner frame line</label>
+    <div class="row"><label for="frameG">Frame gap</label><input type="range" id="frameG" min="0.2" max="1.6" step="0.05"><output id="frameGO"></output></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Bail, beads, metal</legend>
+    <div class="row" style="grid-template-columns:96px minmax(0,1fr)"><label for="bail">Hangs from</label>
+      <select id="bail"><option value="tube">Tube bail (fixed)</option><option value="ring">Side jump ring</option><option value="none">Nothing</option></select></div>
+    <div class="row"><label for="bailH">Bail size</label><input type="range" id="bailH" min="2" max="8" step="0.1"><output id="bailHO"></output></div>
+    <label class="chk"><input type="checkbox" id="beadOn"> Gold beads on the sharp points</label>
+    <div class="row"><label for="bead">Bead size</label><input type="range" id="bead" min="0.4" max="2" step="0.05"><output id="beadO"></output></div>
+    <div class="row" style="grid-template-columns:96px minmax(0,1fr)"><label for="metal">Metal</label>
+      <select id="metal"><option value="y14">14k yellow gold</option><option value="y18">18k yellow gold</option><option value="r14">14k rose gold</option><option value="s925">925 silver</option></select></div>
+    <div class="btns">
+      <button type="button" class="b main" id="exportBtn">Export STL</button>
+      <button type="button" class="b" id="copyBtn">Copy shape code</button>
+    </div>
+    <p class="msg" id="msg"></p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Trace a picture</legend>
+    <p class="note">Load a photo or drawing. It sits under the grid so you can drag the dots onto its edge.</p>
+    <input type="file" id="img" accept="image/*" aria-label="Picture to trace">
+    <div class="row"><label for="imgS">Picture size</label><input type="range" id="imgS" min="5" max="80" step="0.5" value="24"><output id="imgSO"></output></div>
+    <div class="row"><label for="imgX">Move left/right</label><input type="range" id="imgX" min="-20" max="20" step="0.1" value="0"><output id="imgXO"></output></div>
+    <div class="row"><label for="imgY">Move up/down</label><input type="range" id="imgY" min="-20" max="20" step="0.1" value="0"><output id="imgYO"></output></div>
+    <div class="row"><label for="imgO">See-through</label><input type="range" id="imgO" min="0.1" max="1" step="0.05" value="0.5"><output id="imgOO"></output></div>
+  </fieldset>
+</div>
+
+<section class="names" aria-label="Names">
+  <div><b>Ogee lozenge</b>A diamond (lozenge) whose four sides each make an S curve, the ogee. Also sold as a Moorish or Moroccan diamond.</div>
+  <div><b>Tube bail</b>The fixed loop on top. Seen from the front it looks like a narrow tab; the chain runs left to right through it, so the face never flips.</div>
+  <div><b>Beads</b>The little gold balls on the points. Goldsmiths also call them granules.</div>
+  <div><b>Rim and sunken face</b>A raised border around a lower, blank middle. The second line inside is an inner frame.</div>
+</section>
+</div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+// ---------- presets: right half, top (x=0) clockwise to bottom (x=0), in mm; c = sharp point ----------
+const P = (x, y, c) => ({ x, y, c: !!c });
+function quatrefoil() {
+  const out = [], rl = 3.9, d = 3.6;
+  const ray = a => { let best = 0; for (const [cx, cy] of [[0, d], [d, 0], [0, -d], [-d, 0]]) {
+      const ux = Math.cos(a), uy = Math.sin(a), b = ux * cx + uy * cy, disc = b * b - (cx * cx + cy * cy - rl * rl);
+      if (disc >= 0) best = Math.max(best, b + Math.sqrt(disc)); } return best; };
+  for (let deg = 90; deg >= -90; deg -= 11.25) { const a = deg * Math.PI / 180, r = ray(a);
+    out.push(P(+(r * Math.cos(a)).toFixed(2), +(r * Math.sin(a)).toFixed(2), Math.abs(Math.abs(deg) - 45) < 1)); }
+  out[0].x = 0; out[out.length - 1].x = 0; return out;
+}
+const PRESETS = {
+  ogee: { name: 'Ogee lozenge', note: 'pin 1, 15 mm', half: [P(0,7.5,1),P(0.54,6.96),P(1.7,5.95),P(2.38,4.57),P(2.86,3.28),P(3.96,2.46),P(5.01,1.6),P(5.44,0.51),P(5.7,0,1),P(5.44,-0.51),P(5.01,-1.6),P(3.96,-2.46),P(2.86,-3.28),P(2.38,-4.57),P(1.7,-5.95),P(0.54,-6.96),P(0,-7.5,1)],
+    s: { thick: 1.3, round: 0.35, tilt: 1, soft: 4, rimOn: true, rimW: 0.6, rimH: 0.3, frameOn: true, frameG: 0.55, bail: 'tube', bailH: 5.1, beadOn: true, bead: 1 } },
+  lantern: { name: 'Moroccan lantern', note: 'pin 2', half: [P(0,8,1),P(0.9,7.35),P(2.9,6.6),P(4.9,5.6),P(6,4.6,1),P(5.7,2.3),P(5.75,0),P(5.7,-2.3),P(6,-4.6,1),P(4.9,-5.6),P(2.9,-6.6),P(0.9,-7.35),P(0,-8,1)],
+    s: { thick: 1.2, round: 0.25, tilt: 1, soft: 4, rimOn: true, rimW: 0.75, rimH: 0.35, frameOn: false, frameG: 0.55, bail: 'ring', bailH: 4, beadOn: false, bead: 1 } },
+  quatre: { name: 'Quatrefoil', note: 'pin 2', half: quatrefoil(),
+    s: { thick: 1.2, round: 0.25, tilt: 1, soft: 4, rimOn: true, rimW: 0.75, rimH: 0.35, frameOn: false, frameG: 0.55, bail: 'ring', bailH: 4, beadOn: false, bead: 1 } },
+  heart: { name: 'Slim heart', note: 'Shapes v2', half: [P(0,3.6,1),P(1.3,6.2),P(3.4,7.3),P(5.4,6.6),P(6.4,4.1),P(5.6,0),P(3.4,-3.9),P(0,-7.5,1)],
+    s: { thick: 1.3, round: 0.55, tilt: 1, soft: 6, rimOn: false, rimW: 0.6, rimH: 0.3, frameOn: false, frameG: 0.55, bail: 'ring', bailH: 4, beadOn: false, bead: 1 } },
+  pebble: { name: 'Pebble', note: 'S01', half: [P(0,7.4),P(3.6,6.7),P(6.4,3.8),P(6.9,-0.6),P(5.8,-4.7),P(3,-7),P(0,-7.6)],
+    s: { thick: 1.6, round: 0.75, tilt: 1.3, soft: 8, rimOn: false, rimW: 0.6, rimH: 0.3, frameOn: false, frameG: 0.55, bail: 'ring', bailH: 4, beadOn: false, bead: 1 } },
+  oval: { name: 'Oval tag', note: 'S02', half: [P(0,7.5),P(2.9,6.6),P(4.6,3.9),P(5,0),P(4.6,-3.9),P(2.9,-6.6),P(0,-7.5)],
+    s: { thick: 1.2, round: 0.3, tilt: 1, soft: 4, rimOn: true, rimW: 0.6, rimH: 0.3, frameOn: false, frameG: 0.55, bail: 'ring', bailH: 4, beadOn: false, bead: 1 } },
+  bar: { name: 'Rectangle bar', note: 'pin 2', half: [P(0,9),P(2.6,9),P(3.6,8.6),P(4,7.6),P(4,-7.6),P(3.6,-8.6),P(2.6,-9),P(0,-9)],
+    s: { thick: 1.2, round: 0.25, tilt: 1, soft: 4, rimOn: true, rimW: 0.75, rimH: 0.35, frameOn: false, frameG: 0.55, bail: 'ring', bailH: 4, beadOn: false, bead: 1 } },
+  round: { name: 'Round disc', note: 'pin 2', half: Array.from({ length: 9 }, (_, i) => { const a = Math.PI / 2 - i * Math.PI / 8; return P(+(6 * Math.cos(a)).toFixed(2), +(6 * Math.sin(a)).toFixed(2)); }),
+    s: { thick: 1.2, round: 0.3, tilt: 1, soft: 4, rimOn: true, rimW: 0.75, rimH: 0.35, frameOn: false, frameG: 0.55, bail: 'ring', bailH: 4, beadOn: false, bead: 1 } }
+};
+PRESETS.round.half[0].x = 0; PRESETS.round.half[8].x = 0;
+
+const DENSITY = { y14: [13.1, '14K'], y18: [15.6, '18K'], r14: [13.1, '14K ROSE'], s925: [10.36, '925'] };
+const METAL = { y14: [0xE3BC72, 0.26], y18: [0xEDC26A, 0.22], r14: [0xE0A68A, 0.26], s925: [0xE4E4E0, 0.2] };
+
+// ---------- state ----------
+const S = { preset: 'ogee', name: 'Ogee lozenge', sym: true, pts: [], sel: -1, wobble: 0, seed: 3, metal: 'y14' };
+const $ = id => document.getElementById(id);
+const SL = ['thick','round','tilt','soft','rimW','rimH','frameG','bailH','bead','wobble'];
+const CK = ['rimOn','frameOn','beadOn'];
+
+function loadPreset(key) {
+  const p = PRESETS[key]; S.preset = key; S.name = p.name; S.sym = true; S.sel = -1;
+  S.pts = p.half.map(q => ({ ...q }));
+  for (const [k, v] of Object.entries(p.s)) { if (CK.includes(k)) $(k).checked = v; else if ($(k)) $(k).value = v; }
+  $('wobble').value = 0;
+  syncUI(); rebuild();
+}
+
+// ---------- outline maths ----------
+function fullPts() {
+  if (!S.sym) return S.pts;
+  const h = S.pts, m = h.slice(1, -1).reverse().map(q => ({ x: -q.x, y: q.y, c: q.c }));
+  return h.concat(m);
+}
+function cr(p0, p1, p2, p3, u) {
+  // centripetal Catmull-Rom (no loops, no overshoot), u in 0..1 between p1 and p2
+  const k = (a, b) => Math.max(1e-4, Math.pow(Math.hypot(b.x - a.x, b.y - a.y), 0.5));
+  const t0 = 0, t1 = t0 + k(p0, p1), t2 = t1 + k(p1, p2), t3 = t2 + k(p2, p3), t = t1 + (t2 - t1) * u;
+  const L = (a, b, ta, tb) => ({ x: ((tb - t) * a.x + (t - ta) * b.x) / (tb - ta), y: ((tb - t) * a.y + (t - ta) * b.y) / (tb - ta) });
+  const A1 = L(p0, p1, t0, t1), A2 = L(p1, p2, t1, t2), A3 = L(p2, p3, t2, t3);
+  const B1 = L(A1, A2, t0, t2), B2 = L(A2, A3, t1, t3); return L(B1, B2, t1, t2);
+}
+function run(R, closed) {
+  const out = [], m = R.length, n = closed ? m : m - 1;
+  const at = i => closed ? R[(i + m) % m] : (i < 0 ? { x: 2 * R[0].x - R[1].x, y: 2 * R[0].y - R[1].y } : i >= m ? { x: 2 * R[m - 1].x - R[m - 2].x, y: 2 * R[m - 1].y - R[m - 2].y } : R[i]);
+  for (let i = 0; i < n; i++) { const p1 = at(i), p2 = at(i + 1), len = Math.hypot(p2.x - p1.x, p2.y - p1.y); if (len < 1e-6) continue;
+    const steps = Math.max(6, Math.ceil(len / 0.1));
+    for (let s = 0; s < steps; s++) { const q = cr(at(i - 1), p1, p2, at(i + 2), s / steps); out.push([q.x, q.y]); } }
+  return out;
+}
+function sample(pts) {
+  // a sharp dot splits the outline into separate smooth runs, so it makes a clean corner
+  const sharp = pts.map((p, i) => p.c ? i : -1).filter(i => i >= 0);
+  if (!sharp.length) return dedupe(run(pts, true));
+  const n = pts.length, out = [];
+  for (let k = 0; k < sharp.length; k++) { const a = sharp[k], b = sharp[(k + 1) % sharp.length], R = [];
+    for (let i = a; ; i = (i + 1) % n) { R.push(pts[i]); if (i === b && R.length > 1) break; if (R.length > n + 1) break; }
+    out.push(...run(R, false)); }
+  return dedupe(out);
+}
+function dedupe(a) { const o = []; for (const p of a) { const l = o[o.length - 1]; if (!l || Math.hypot(p[0] - l[0], p[1] - l[1]) > 0.02) o.push(p); }
+  if (o.length > 2 && Math.hypot(o[0][0] - o[o.length - 1][0], o[0][1] - o[o.length - 1][1]) < 0.02) o.pop(); return o; }
+function area(a) { let s = 0; for (let i = 0; i < a.length; i++) { const p = a[i], q = a[(i + 1) % a.length]; s += p[0] * q[1] - q[0] * p[1]; } return s / 2; }
+function offset(a, d) {
+  // inward offset by d mm (positive = smaller), miter limited
+  const sgn = area(a) > 0 ? 1 : -1, n = a.length, o = [];
+  for (let i = 0; i < n; i++) {
+    const p = a[(i - 1 + n) % n], c = a[i], q = a[(i + 1) % n];
+    let e1 = [c[0] - p[0], c[1] - p[1]], e2 = [q[0] - c[0], q[1] - c[1]];
+    const l1 = Math.hypot(...e1) || 1, l2 = Math.hypot(...e2) || 1; e1 = [e1[0] / l1, e1[1] / l1]; e2 = [e2[0] / l2, e2[1] / l2];
+    const n1 = [-e1[1] * sgn, e1[0] * sgn], n2 = [-e2[1] * sgn, e2[0] * sgn];
+    let m = [n1[0] + n2[0], n1[1] + n2[1]]; const ml = Math.hypot(...m) || 1; m = [m[0] / ml, m[1] / ml];
+    const cos = Math.max(0.35, m[0] * n1[0] + m[1] * n1[1]);
+    o.push([c[0] + m[0] * d / cos, c[1] + m[1] * d / cos]);
+  }
+  return cleanLoops(o, a, d);
+}
+function inside(p, poly) { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const a = poly[i], b = poly[j];
+  if ((a[1] > p[1]) !== (b[1] > p[1]) && p[0] < (b[0] - a[0]) * (p[1] - a[1]) / (b[1] - a[1]) + a[0]) c = !c; } return c; }
+function cleanLoops(o, src, d) {
+  // drop points that crossed through a tight dip or poked outside the shape
+  const keep = o.filter(p => { if (!inside(p, src)) return false; let best = 1e9; for (const s of src) best = Math.min(best, Math.hypot(p[0] - s[0], p[1] - s[1])); return best > d * 0.8; });
+  return dedupe(keep.length > 8 ? keep : o);
+}
+function wobble(a, amp, seed) {
+  if (amp <= 0) return a;
+  const sgn = area(a) > 0 ? 1 : -1, n = a.length;
+  let L = 0; const acc = [0]; for (let i = 1; i < n; i++) { L += Math.hypot(a[i][0] - a[i - 1][0], a[i][1] - a[i - 1][1]); acc.push(L); }
+  L += Math.hypot(a[0][0] - a[n - 1][0], a[0][1] - a[n - 1][1]);
+  return a.map((c, i) => { const p = a[(i - 1 + n) % n], q = a[(i + 1) % n]; let t = [q[0] - p[0], q[1] - p[1]]; const tl = Math.hypot(...t) || 1;
+    const nx = t[1] / tl * sgn, ny = -t[0] / tl * sgn, u = acc[i] / L * Math.PI * 2;
+    const w = (Math.sin(3 * u + seed) + 0.6 * Math.sin(7 * u + seed * 2.3) + 0.35 * Math.sin(13 * u + seed * 0.7)) / 1.95;
+    return [c[0] + nx * w * amp, c[1] + ny * w * amp]; });
+}
+function bbox(a) { let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; for (const [x, y] of a) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); } return { x0, x1, y0, y1, w: x1 - x0, h: y1 - y0 }; }
+
+// ---------- 3D ----------
+const stage = $('stage');
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+stage.prepend(renderer.domElement);
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 500);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.minDistance = 12; controls.maxDistance = 140;
+const key = new THREE.DirectionalLight(0xfff1d6, 1.4); key.position.set(-20, 30, 40); scene.add(key);
+const group = new THREE.Group(); scene.add(group);
+const chainMat = new THREE.MeshStandardMaterial({ color: 0xC9A55C, metalness: 1, roughness: 0.3 });
+let mat = new THREE.MeshPhysicalMaterial({ color: 0xE3BC72, metalness: 1, roughness: 0.26, clearcoat: 0.25 });
+
+function shapeFrom(outer, holes) {
+  const sh = new THREE.Shape(outer.map(p => new THREE.Vector2(p[0], p[1])));
+  for (const h of holes || []) sh.holes.push(new THREE.Path(h.map(p => new THREE.Vector2(p[0], p[1]))));
+  return sh;
+}
+function slab(outer, holes, z0, h, r, tilt, segs) {
+  const bt = Math.min(r, h * 0.48), bs = Math.min(bt * tilt, 1.6);
+  const depth = Math.max(0.01, h - 2 * bt);
+  const g = new THREE.ExtrudeGeometry(shapeFrom(outer, holes), { depth, bevelEnabled: bt > 0.005, bevelThickness: bt, bevelSize: bs, bevelOffset: -bs, bevelSegments: segs, curveSegments: 1 });
+  g.translate(0, 0, z0 + bt); return { g, bs };
+}
+
+let lastMeshes = [], info = {};
+function rebuild() {
+  const v = id => parseFloat($(id).value), on = id => $(id).checked;
+  S.wobble = v('wobble');
+  const pts = fullPts();
+  let out = wobble(sample(pts), S.wobble, S.seed);
+  const T = v('thick'), r = v('round'), tilt = v('tilt'), segs = v('soft') | 0;
+  const meshes = [];
+  for (const m of group.children.slice()) { group.remove(m); m.geometry && m.geometry.dispose(); }
+  // plate
+  const plate = slab(out, null, 0, T, r, tilt, segs); meshes.push(new THREE.Mesh(plate.g, mat));
+  let inner = offset(out, plate.bs + 0.05);
+  // rim and frame on the front face
+  if (on('rimOn')) {
+    const rw = v('rimW'), rh = v('rimH'), rimIn = offset(inner, rw);
+    if (rimIn.length > 8 && inner.length > 8) {
+    meshes.push(new THREE.Mesh(slab(inner, [rimIn], T - 0.02, rh + 0.02, Math.min(0.12, rh / 2.5, rw / 4), 1, 3).g, mat));
+    if (on('frameOn')) {
+      const fo = offset(rimIn, v('frameG')), fi = offset(fo, Math.max(0.28, rw * 0.55));
+      if (fi.length > 8) meshes.push(new THREE.Mesh(slab(fo, [fi], T - 0.02, rh * 0.8 + 0.02, Math.min(0.1, rh / 3), 1, 3).g, mat));
+    }
+    }
+  }
+  // anchor for the bail: top dot of the mirrored half, else the highest point
+  const b = bbox(out);
+  let anchor = S.sym ? [0, S.pts[0].y] : out.reduce((a, p) => p[1] > a[1] ? p : a, [0, -1e9]);
+  if (S.sym) { const near = out.filter(p => Math.abs(p[0]) < 0.4); if (near.length) anchor = [0, near.reduce((a, p) => Math.abs(p[1] - S.pts[0].y) < Math.abs(a - S.pts[0].y) ? p[1] : a, near[0][1])]; }
+  const bailType = $('bail').value, bh = v('bailH');
+  let topY = b.y1;
+  if (bailType === 'tube') {
+    const ry = bh / 2, rz = Math.max(T * 0.5 + 0.35, 0.9), wire = 0.42, w = Math.max(1.6, bh * 0.55);
+    const cy = anchor[1] + ry - 0.75, pts3 = [];
+    for (let i = 0; i < 48; i++) { const a = i / 48 * Math.PI * 2; pts3.push(new THREE.Vector3(0, cy + ry * Math.sin(a) * 0.98, T / 2 + rz * Math.cos(a))); }
+    const g = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts3, true), 96, wire, 18, true);
+    g.scale(w / (2 * wire), 1, 1);
+    // taper: narrower at the top like the pin
+    const pos = g.attributes.position; for (let i = 0; i < pos.count; i++) { const y = pos.getY(i), k = 0.5 + 0.5 * Math.max(0, Math.min(1, (y - (cy - ry)) / (2 * ry))); pos.setX(i, pos.getX(i) * k); }
+    g.computeVertexNormals(); meshes.push(new THREE.Mesh(g, mat)); topY = Math.max(topY, cy + ry + wire);
+  } else if (bailType === 'ring') {
+    const R = bh / 2, wire = Math.max(0.35, bh * 0.09), holeY = anchor[1] - Math.max(0.9, T * 0.6);
+    const g = new THREE.TorusGeometry(R, wire, 16, 72); g.rotateY(Math.PI / 2); g.translate(0, holeY + R, T / 2);
+    meshes.push(new THREE.Mesh(g, mat)); topY = Math.max(topY, holeY + 2 * R + wire);
+  }
+  // beads on sharp points (not the one carrying the bail)
+  if (on('beadOn')) {
+    const rr = v('bead') / 2;
+    for (const p of pts) { if (!p.c) continue; if (bailType !== 'none' && Math.abs(p.x - anchor[0]) < 0.3 && Math.abs(p.y - anchor[1]) < 0.3) continue;
+      const cx = (b.x0 + b.x1) / 2, cy2 = (b.y0 + b.y1) / 2; let dx = p.x - cx, dy = p.y - cy2; const l = Math.hypot(dx, dy) || 1;
+      const g = new THREE.SphereGeometry(rr, 28, 20); g.translate(p.x + dx / l * rr * 0.6, p.y + dy / l * rr * 0.6, T / 2);
+      meshes.push(new THREE.Mesh(g, mat)); }
+  }
+  for (const m of meshes) group.add(m);
+  // chain through the bail, left to right
+  if (bailType !== 'none') { const cyc = bailType === 'tube' ? anchor[1] + bh - 0.75 - 0.9 : anchor[1] - Math.max(0.9, T * 0.6) + bh - 0.6;
+    const c = new THREE.CatmullRomCurve3([new THREE.Vector3(-40, cyc + 14, T / 2), new THREE.Vector3(-10, cyc + 2.2, T / 2), new THREE.Vector3(0, cyc, T / 2), new THREE.Vector3(10, cyc + 2.2, T / 2), new THREE.Vector3(40, cyc + 14, T / 2)]);
+    const ch = new THREE.Mesh(new THREE.TubeGeometry(c, 160, 0.28, 8, false), chainMat); ch.userData.chain = true; group.add(ch); }
+  lastMeshes = meshes;
+  // read-outs
+  let vol = 0; for (const m of meshes) vol += volumeOf(m.geometry);
+  const [dens, lab] = DENSITY[S.metal];
+  info = { h: b.h, w: b.w, T, total: topY - b.y0, vol, g: vol / 1000 * dens };
+  $('rSize').textContent = b.h.toFixed(1) + ' × ' + b.w.toFixed(1) + ' mm';
+  $('rTotal').textContent = bailType === 'none' ? '–' : (topY - b.y0).toFixed(1) + ' mm';
+  $('rThick').textContent = (T + (on('rimOn') ? v('rimH') : 0)).toFixed(2) + ' mm';
+  $('rWeightL').textContent = 'WEIGHT · ' + lab;
+  $('rWeight').textContent = '≈ ' + info.g.toFixed(2) + ' g';
+  $('shapeTitle').textContent = S.name;
+  drawGrid(out, b);
+}
+function volumeOf(g) {
+  const p = g.attributes.position, idx = g.index; let v = 0; const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
+  const n = idx ? idx.count : p.count;
+  for (let i = 0; i < n; i += 3) { const i0 = idx ? idx.getX(i) : i, i1 = idx ? idx.getX(i + 1) : i + 1, i2 = idx ? idx.getX(i + 2) : i + 2;
+    a.fromBufferAttribute(p, i0); b.fromBufferAttribute(p, i1); c.fromBufferAttribute(p, i2); v += a.dot(b.clone().cross(c)) / 6; }
+  return Math.abs(v);
+}
+
+function setView(kind) {
+  const t = new THREE.Vector3(0, 1.5, 0.6); controls.target.copy(t);
+  const d = 42;
+  if (kind === 'front') camera.position.set(0, 1.5, d);
+  else if (kind === 'side') camera.position.set(d, 1.5, 0.6);
+  else camera.position.set(-d * 0.55, d * 0.35, d * 0.75);
+  controls.update();
+}
+function resize() { const r = stage.getBoundingClientRect(); renderer.setSize(r.width, r.height, false); camera.aspect = r.width / r.height; camera.updateProjectionMatrix(); }
+new ResizeObserver(resize).observe(stage);
+document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+function tick() { controls.update(); renderer.render(scene, camera); requestAnimationFrame(tick); }
+
+// ---------- grid editor ----------
+const svg = $('grid'), NS = 'http://www.w3.org/2000/svg';
+const VB = { x: -14, y: -14, w: 28, h: 28 };
+let img = { href: null, s: 24, x: 0, y: 0, o: 0.5, ar: 1 };
+function el(t, a) { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); return e; }
+function drawGrid(out, b) {
+  const span = Math.max(b.w, b.h, 10) + 8; VB.w = VB.h = Math.ceil(span); VB.x = -VB.w / 2; VB.y = -VB.h / 2 - 1;
+  svg.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
+  svg.replaceChildren();
+  const cs = getComputedStyle(document.documentElement), css = { getPropertyValue: k => cs.getPropertyValue(k).trim() };
+  if (img.href) { const w = img.s, h = img.s * img.ar; svg.append(el('image', { href: img.href, x: img.x - w / 2, y: -img.y - h / 2, width: w, height: h, opacity: img.o, preserveAspectRatio: 'none' })); }
+  const g = el('g', {});
+  for (let i = Math.floor(VB.x); i <= VB.x + VB.w; i++) g.append(el('line', { x1: i, y1: VB.y, x2: i, y2: VB.y + VB.h, stroke: i % 5 ? css.getPropertyValue('--grid') : css.getPropertyValue('--grid5'), 'stroke-width': i === 0 ? 0.09 : 0.04 }));
+  for (let j = Math.floor(VB.y); j <= VB.y + VB.h; j++) g.append(el('line', { x1: VB.x, y1: j, x2: VB.x + VB.w, y2: j, stroke: j % 5 ? css.getPropertyValue('--grid') : css.getPropertyValue('--grid5'), 'stroke-width': j === 0 ? 0.09 : 0.04 }));
+  svg.append(g);
+  for (let k = -10; k <= 10; k += 5) { if (k === 0) continue; const t = el('text', { x: k, y: VB.y + 1.1, 'font-size': 0.75, fill: css.getPropertyValue('--soft'), 'text-anchor': 'middle', 'font-family': 'Cutive Mono, monospace' }); t.textContent = k; svg.append(t); }
+  const d = 'M' + out.map(p => p[0].toFixed(3) + ' ' + (-p[1]).toFixed(3)).join('L') + 'Z';
+  svg.append(el('path', { d, fill: css.getPropertyValue('--gold'), 'fill-opacity': 0.28, stroke: css.getPropertyValue('--ink'), 'stroke-width': 0.1, 'stroke-linejoin': 'round' }));
+  // height bracket
+  const bx = b.x1 + 1.4;
+  svg.append(el('path', { d: `M${bx - 0.3} ${-b.y1}H${bx + 0.3}M${bx} ${-b.y1}V${-b.y0}M${bx - 0.3} ${-b.y0}H${bx + 0.3}`, stroke: css.getPropertyValue('--red'), 'stroke-width': 0.08, fill: 'none' }));
+  const ht = el('text', { x: bx + 0.5, y: -(b.y0 + b.y1) / 2, 'font-size': 0.8, fill: css.getPropertyValue('--red'), 'font-family': 'Cutive Mono, monospace' }); ht.textContent = b.h.toFixed(1) + ' mm'; svg.append(ht);
+  const by = -b.y0 + 1.4;
+  svg.append(el('path', { d: `M${b.x0} ${by - 0.3}V${by + 0.3}M${b.x0} ${by}H${b.x1}M${b.x1} ${by - 0.3}V${by + 0.3}`, stroke: css.getPropertyValue('--red'), 'stroke-width': 0.08, fill: 'none' }));
+  const wt = el('text', { x: (b.x0 + b.x1) / 2, y: by + 1.1, 'font-size': 0.8, fill: css.getPropertyValue('--red'), 'text-anchor': 'middle', 'font-family': 'Cutive Mono, monospace' }); wt.textContent = b.w.toFixed(1) + ' mm'; svg.append(wt);
+  const all = fullPts();
+  all.forEach((p, i) => { const editable = !S.sym || i < S.pts.length;
+    const c = el('circle', { cx: p.x, cy: -p.y, r: editable ? 0.42 : 0.26, fill: i === S.sel ? css.getPropertyValue('--red') : (p.c ? css.getPropertyValue('--ink') : css.getPropertyValue('--paper')), stroke: css.getPropertyValue('--ink'), 'stroke-width': 0.08, opacity: editable ? 1 : 0.45, 'data-i': editable ? i : -1, style: editable ? 'cursor:grab' : '' });
+    svg.append(c);
+    if (editable) svg.append(el('circle', { cx: p.x, cy: -p.y, r: 1.1, fill: 'transparent', 'data-i': i, style: 'cursor:grab' })); });
+}
+function svgPt(e) { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; const m = svg.getScreenCTM().inverse(); const q = pt.matrixTransform(m); return { x: q.x, y: -q.y }; }
+let drag = -1;
+svg.addEventListener('pointerdown', e => { const i = +(e.target.getAttribute('data-i') ?? -1); if (i < 0) return; drag = i; S.sel = i; svg.setPointerCapture(e.pointerId); syncSel(); e.preventDefault(); });
+svg.addEventListener('pointermove', e => { if (drag < 0) return; const q = svgPt(e), p = S.pts[drag];
+  const snap = v => Math.round(v * 20) / 20;
+  p.y = snap(q.y); p.x = (S.sym && (drag === 0 || drag === S.pts.length - 1)) ? 0 : snap(S.sym ? Math.max(0, q.x) : q.x); rebuildSoon(); });
+svg.addEventListener('pointerup', () => { drag = -1; rebuild(); syncUI(); });
+let raf = 0; function rebuildSoon() { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; rebuild(); }); }
+
+function syncSel() {
+  const p = S.pts[S.sel];
+  $('sharpPt').setAttribute('aria-pressed', String(!!(p && p.c)));
+  $('selNote').textContent = p ? `Dot ${S.sel + 1}: ${p.x.toFixed(2)}, ${p.y.toFixed(2)} mm${p.c ? ', sharp' : ''}` : 'Tap a dot on the grid to pick it.';
+  $('delPt').disabled = !p || S.pts.length <= (S.sym ? 3 : 4) || (S.sym && (S.sel === 0 || S.sel === S.pts.length - 1));
+  rebuild();
+}
+$('addPt').addEventListener('click', () => { let i = S.sel; const n = S.pts.length; if (i < 0 || (S.sym && i >= n - 1)) i = Math.floor((n - 1) / 2);
+  const a = S.pts[i], b = S.pts[(i + 1) % n]; S.pts.splice(i + 1, 0, { x: +((a.x + b.x) / 2).toFixed(2), y: +((a.y + b.y) / 2).toFixed(2), c: false }); S.sel = i + 1; syncSel(); });
+$('delPt').addEventListener('click', () => { if ($('delPt').disabled) return; S.pts.splice(S.sel, 1); S.sel = -1; syncSel(); });
+$('sharpPt').addEventListener('click', () => { const p = S.pts[S.sel]; if (!p) { msg('Pick a dot first.'); return; } p.c = !p.c; syncSel(); });
+$('symBtn').addEventListener('click', () => {
+  if (S.sym) { S.pts = fullPts().map(p => ({ ...p })); S.sym = false; }
+  else { // keep the right side, from the top dot round to the bottom dot
+    const a = S.pts; let top = 0, bot = 0; a.forEach((p, i) => { if (p.y > a[top].y) top = i; if (p.y < a[bot].y) bot = i; });
+    const path = []; for (let i = top; ; i = (i + 1) % a.length) { path.push({ ...a[i] }); if (i === bot) break; }
+    const right = path.reduce((s, p) => s + p.x, 0) >= 0 ? path : (() => { const p2 = []; for (let i = top; ; i = (i - 1 + a.length) % a.length) { p2.push({ ...a[i], x: -a[i].x }); if (i === bot) break; } return p2; })();
+    right[0].x = 0; right[right.length - 1].x = 0; S.pts = right.map(p => ({ ...p, x: Math.max(0, p.x) })); S.sym = true; }
+  S.sel = -1; $('symBtn').setAttribute('aria-pressed', String(S.sym)); syncSel(); });
+
+// size sliders scale the dots directly
+function scalePts(kx, ky) { for (const p of S.pts) { p.x = +(p.x * kx).toFixed(3); p.y = +(p.y * ky).toFixed(3); } }
+$('height').addEventListener('input', () => { const b = bbox(fullPts().map(p => [p.x, p.y])), out = bbox(wobble(sample(fullPts()), S.wobble, S.seed)); const t = parseFloat($('height').value);
+  scalePts(1, t / out.h); outV(); rebuildSoon(); });
+$('width').addEventListener('input', () => { const out = bbox(wobble(sample(fullPts()), S.wobble, S.seed)); const t = parseFloat($('width').value);
+  scalePts(t / out.w, 1); outV(); rebuildSoon(); });
+
+const FMT = { thick: v => v.toFixed(2) + ' mm', round: v => v.toFixed(2) + ' mm', tilt: v => v < 0.8 ? 'steep' : v > 1.6 ? 'gentle' : 'even', soft: v => v <= 1 ? 'chamfer' : v >= 6 ? 'round' : 'soft', rimW: v => v.toFixed(2) + ' mm', rimH: v => v.toFixed(2) + ' mm', frameG: v => v.toFixed(2) + ' mm', bailH: v => v.toFixed(1) + ' mm', bead: v => v.toFixed(2) + ' mm', wobble: v => v === 0 ? 'off' : v.toFixed(2) + ' mm' };
+function outV() { for (const k of SL) $(k + 'O').textContent = FMT[k](parseFloat($(k).value));
+  $('heightO').textContent = parseFloat($('height').value).toFixed(1) + ' mm'; $('widthO').textContent = parseFloat($('width').value).toFixed(1) + ' mm';
+  $('imgSO').textContent = img.s + ' mm'; $('imgXO').textContent = img.x; $('imgYO').textContent = img.y; $('imgOO').textContent = Math.round(img.o * 100) + '%'; }
+function syncUI() { const out = bbox(wobble(sample(fullPts()), parseFloat($('wobble').value), S.seed)); $('height').value = out.h.toFixed(1); $('width').value = out.w.toFixed(1);
+  $('preset').value = S.preset; $('symBtn').setAttribute('aria-pressed', String(S.sym)); $('metal').value = S.metal; outV(); }
+for (const k of SL) $(k).addEventListener('input', () => { outV(); rebuildSoon(); });
+for (const k of CK) $(k).addEventListener('change', rebuild);
+$('bail').addEventListener('change', rebuild);
+$('metal').addEventListener('change', () => { S.metal = $('metal').value; const [c, r] = METAL[S.metal]; mat.color.setHex(c); mat.roughness = r; chainMat.color.setHex(c); rebuild(); });
+const sel = $('preset'); for (const [k, p] of Object.entries(PRESETS)) { const o = document.createElement('option'); o.value = k; o.textContent = p.name + ' · ' + p.note; sel.append(o); }
+sel.addEventListener('change', () => loadPreset(sel.value));
+
+// trace picture
+$('img').addEventListener('change', e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader();
+  r.onload = () => { const im = new Image(); im.onload = () => { img.ar = im.naturalHeight / im.naturalWidth; img.href = r.result; rebuild(); }; im.src = r.result; }; r.readAsDataURL(f); });
+for (const [id, k] of [['imgS', 's'], ['imgX', 'x'], ['imgY', 'y'], ['imgO', 'o']]) $(id).addEventListener('input', () => { img[k] = parseFloat($(id).value); outV(); rebuildSoon(); });
+
+// ---------- export ----------
+function msg(t) { $('msg').textContent = t; }
+function stlBytes() {
+  group.updateMatrixWorld(true);
+  const tris = [];
+  for (const m of lastMeshes) { const g = m.geometry, p = g.attributes.position, idx = g.index, n = idx ? idx.count : p.count;
+    for (let i = 0; i < n; i += 3) { const v = [0, 1, 2].map(k => new THREE.Vector3().fromBufferAttribute(p, idx ? idx.getX(i + k) : i + k).applyMatrix4(m.matrixWorld)); tris.push(v); } }
+  const buf = new ArrayBuffer(84 + tris.length * 50), dv = new DataView(buf);
+  const head = 'Bare Stories Pendant Lab v2, units mm'; for (let i = 0; i < head.length; i++) dv.setUint8(i, head.charCodeAt(i));
+  dv.setUint32(80, tris.length, true); let o = 84;
+  for (const [a, b, c] of tris) { const nrm = b.clone().sub(a).cross(c.clone().sub(a)).normalize();
+    for (const v of [nrm, a, b, c]) { dv.setFloat32(o, v.x, true); dv.setFloat32(o + 4, v.y, true); dv.setFloat32(o + 8, v.z, true); o += 12; } o += 2; }
+  return new Uint8Array(buf);
+}
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(u8) { let c = 0xFFFFFFFF; for (let i = 0; i < u8.length; i++) c = CRC[(c ^ u8[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function zip(files) { // stored, no compression
+  const enc = new TextEncoder(), parts = [], cen = []; let off = 0;
+  for (const f of files) { const name = enc.encode(f.name), crc = crc32(f.data), sz = f.data.length;
+    const lh = new DataView(new ArrayBuffer(30)); lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(8, 0, true); lh.setUint32(14, crc, true); lh.setUint32(18, sz, true); lh.setUint32(22, sz, true); lh.setUint16(26, name.length, true);
+    parts.push(new Uint8Array(lh.buffer), name, f.data);
+    const ch = new DataView(new ArrayBuffer(46)); ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint32(16, crc, true); ch.setUint32(20, sz, true); ch.setUint32(24, sz, true); ch.setUint16(28, name.length, true); ch.setUint32(42, off, true);
+    cen.push(new Uint8Array(ch.buffer), name); off += 30 + name.length + sz; }
+  const cs = cen.reduce((s, a) => s + a.length, 0), end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0, 0x06054b50, true); end.setUint16(8, files.length, true); end.setUint16(10, files.length, true); end.setUint32(12, cs, true); end.setUint32(16, off, true);
+  return new Blob([...parts, ...cen, new Uint8Array(end.buffer)], { type: 'application/zip' });
+}
+function shapeCode() { const v = id => +$(id).value; return JSON.stringify({ lab: 'Pendant Lab v2', shape: S.name, sym: S.sym, dots: S.pts.map(p => [+p.x.toFixed(2), +p.y.toFixed(2), p.c ? 1 : 0]),
+  thick: v('thick'), round: v('round'), tilt: v('tilt'), edge: v('soft'), rim: $('rimOn').checked ? [v('rimW'), v('rimH')] : 0, frame: $('frameOn').checked ? v('frameG') : 0,
+  bail: $('bail').value, bailSize: v('bailH'), beads: $('beadOn').checked ? v('bead') : 0, organic: v('wobble'), metal: S.metal, size_mm: [+info.h.toFixed(2), +info.w.toFixed(2)], weight_g: +info.g.toFixed(2) }); }
+window.__lab = { stlBytes, shapeCode, info: () => info };
+$('exportBtn').addEventListener('click', async () => {
+  const stl = stlBytes(), base = `${S.name} ${info.h.toFixed(1)}mm`;
+  const z = zip([{ name: base + '.stl', data: stl }, { name: base + ' settings.json', data: new TextEncoder().encode(shapeCode()) }]);
+  try { const dl = await (window.claude?.use?.('downloads') ?? null);
+    if (!dl) { const u = URL.createObjectURL(new Blob([z], { type: 'application/zip' })), ln = document.createElement('a'); ln.href = u; ln.download = base + '.zip'; document.body.append(ln); ln.click(); ln.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); msg('Saved to your downloads. The STL inside is in millimetres.'); return; }
+    await dl.save({ filename: base + '.zip', data: z }); msg('Saved. The STL is inside the zip, in millimetres.');
+  } catch (e) { msg(e && e.code === 'declined' ? 'Export cancelled.' : 'Export did not go through: ' + (e && (e.message || e.code) || 'unknown')); }
+});
+$('copyBtn').addEventListener('click', async () => { const t = shapeCode();
+  try { await navigator.clipboard.writeText(t); msg('Shape code copied. Paste it to Claude to keep this exact shape.'); }
+  catch { msg('Copy was blocked here. Use Export STL, the settings file is inside the zip.'); } });
+
+
+loadPreset('ogee');
+setView('front'); resize(); tick();
+</script>

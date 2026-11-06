@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Pendant Lab v3 · CC Notes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500&family=Nothing+You+Could+Do&family=IM+Fell+English+SC&family=Homemade+Apple&family=Cutive+Mono&display=swap" rel="stylesheet">
+<style>
+/* Layout: felt-paper workbench in the Bee Studio colours. Sky title card, read-outs, 3D view beside the mm grid, raised paper drawers below. Phone stacks everything. */
+:root{
+  --bg:#E0DDD6; --paper:#ECE9E3; --ink:#402D30; --soft:#6E6066; --line:#C9C1B7;
+  --sky:#A1ABAD; --blue:#5E6E74; --act:#76413A; --onact:#EDE6DA; --red:#A05D4A; --gold:#B8924F;
+  --stage1:#B4BEC0; --stage2:#7F8C91; --grid:#DBD6CD; --grid5:#B3AAA0; --on:#EDE6DA;
+  --lift:0 1px 0 rgba(255,255,255,.55) inset, 0 3px 10px -3px rgba(64,45,48,.28), 0 1px 2px rgba(64,45,48,.12);
+  --display:'Cormorant Garamond', 'IM Fell English SC', Georgia, serif;
+  --mono:'Jost', 'Avenir Next', system-ui, sans-serif;
+  --hand:'Nothing You Could Do', 'Homemade Apple', cursive;
+  --tex:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .25 0 0 0 0 .18 0 0 0 0 .19 0 0 0 .13 0'/></filter><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='.012 .3' numOctaves='2' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .25 0 0 0 0 .18 0 0 0 0 .19 0 0 0 .07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/><rect width='100%' height='100%' filter='url(%23f)'/></svg>");
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#2E2124; --paper:#3A2B2E; --ink:#E4DCD0; --soft:#B9ABA6; --line:#58464A;
+  --sky:#A1ABAD; --blue:#AFBBBE; --act:#A05D4A; --onact:#F3EDE3; --red:#E0A08C; --gold:#D3AE68;
+  --stage1:#5C686E; --stage2:#363F44; --grid:#45363A; --grid5:#6B575C; --on:#F3EDE3;
+  --lift:0 1px 0 rgba(255,255,255,.06) inset, 0 3px 10px -3px rgba(0,0,0,.5); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#2E2124; --paper:#3A2B2E; --ink:#E4DCD0; --soft:#B9ABA6; --line:#58464A;
+  --sky:#A1ABAD; --blue:#AFBBBE; --act:#A05D4A; --onact:#F3EDE3; --red:#E0A08C; --gold:#D3AE68;
+  --stage1:#5C686E; --stage2:#363F44; --grid:#45363A; --grid5:#6B575C; --on:#F3EDE3;
+  --lift:0 1px 0 rgba(255,255,255,.06) inset, 0 3px 10px -3px rgba(0,0,0,.5); color-scheme:dark}
+html{-webkit-text-size-adjust:100%}
+body{background-color:var(--bg);background-image:var(--tex);color:var(--ink);font-family:var(--mono);font-size:14px;line-height:1.5}
+.wrap{max-width:1260px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 40px;display:flex;flex-direction:column;gap:10px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:2px 16px;background:var(--sky) var(--tex);color:#402D30;padding:14px 16px 12px;box-shadow:var(--lift)}
+header .eyebrow{color:#402D30;opacity:.8}
+header .hand{color:#402D30}
+h1{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(32px,4.4vw,46px);line-height:1;text-wrap:balance}
+.eyebrow{font-size:11px;letter-spacing:.22em;font-weight:500;color:var(--red)}
+.hand{font-family:var(--hand);font-size:19px;color:var(--blue)}
+.bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.bar .sep{width:1px;align-self:stretch;background:var(--line);margin:0 4px}
+.read{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);box-shadow:var(--lift)}
+.read div{background:var(--paper) var(--tex);padding:7px 10px;display:flex;flex-direction:column;min-width:0}
+.read span{font-size:10.5px;letter-spacing:.12em;color:var(--soft)}
+.read b{font-family:var(--display);font-weight:600;font-size:21px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:520px){.read{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.bench{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:10px}
+.panel{background:var(--paper) var(--tex);border:1px solid var(--line);position:relative;min-width:0;box-shadow:var(--lift)}
+.stage{height:min(62vh,540px);min-height:300px;background:radial-gradient(120% 90% at 50% 35%,var(--stage1),var(--stage2));overflow:hidden}
+.stage canvas{display:block;width:100%;height:100%;touch-action:none}
+.gridbox{height:min(62vh,540px);min-height:300px;overflow:hidden}
+.gridbox svg{width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+@media (max-width:820px){.bench{grid-template-columns:minmax(0,1fr)}.stage{height:340px;min-height:0}.gridbox{height:330px;min-height:0}}
+.tag{position:absolute;left:10px;bottom:8px;font-size:11px;letter-spacing:.1em;color:#FFFFFF;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.gridbox .tag{color:var(--soft);text-shadow:none}
+.gridbox .gtag{top:8px;bottom:auto}
+.gridbox .mode{top:30px}
+.mode{position:absolute;left:10px;top:8px;font-size:12px;background:var(--red);color:#fff;padding:2px 8px}
+.views{position:absolute;right:8px;top:8px;display:flex;gap:6px}
+.views button{background:rgba(255,255,255,.88);color:#2C2824;border:0;min-height:36px;padding:0 10px;font-family:var(--mono);font-size:12px;cursor:pointer}
+.help{font-size:12.5px;color:var(--soft);margin:0}
+.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:start}
+@media (max-width:1020px){.controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.controls{grid-template-columns:minmax(0,1fr)}}
+fieldset{margin:0;border:1px solid var(--line);background:var(--paper) var(--tex);box-shadow:var(--lift);padding:8px 12px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+fieldset[hidden],.row[hidden]{display:none!important}
+legend{font-family:var(--display);font-weight:600;font-size:22px;padding:0 4px}
+.row{display:grid;grid-template-columns:104px minmax(0,1fr) 76px;align-items:center;gap:8px}
+.row.sel{grid-template-columns:104px minmax(0,1fr)}
+.row label{font-size:12px;color:var(--soft);line-height:1.25;letter-spacing:.02em}
+input[type=range]{width:100%;accent-color:var(--act);height:28px;margin:0}
+input[type=number],input[type=text]{font-family:var(--mono);font-size:16px;width:100%;box-sizing:border-box;min-height:36px;padding:0 6px;border:1px solid var(--line);border-radius:0;background:var(--bg);color:var(--ink);font-variant-numeric:tabular-nums}
+select{font-family:var(--mono);font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:0;min-height:40px;padding:0 8px;width:100%;box-sizing:border-box;max-width:100%}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+button.b{font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;min-height:40px;padding:0 12px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;border-radius:0}
+button.b[aria-pressed="true"],button.b.main{background:var(--act);color:var(--onact);border-color:var(--act);box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 2px 5px -2px rgba(64,45,48,.4)}
+button.b:disabled{opacity:.38;cursor:default}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.chk{display:flex;align-items:center;gap:8px;font-size:12.5px;min-height:34px}
+.chk input{width:18px;height:18px;accent-color:var(--act);flex:none}
+.msg{font-size:12.5px;color:var(--red);min-height:1.2em;margin:0}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div style="display:flex;flex-direction:column;gap:2px">
+    <span class="eyebrow">BARE STORIES · PENDANT LAB · V3</span>
+    <h1 id="shapeTitle">Pebble</h1>
+  </div>
+  <span class="hand">drag the dots, the gold follows</span>
+</header>
+
+<div class="bar" role="toolbar" aria-label="Lab tools">
+  <button type="button" class="b" id="undo" disabled>Undo</button>
+  <button type="button" class="b" id="redo" disabled>Redo</button>
+  <span class="sep"></span>
+  <button type="button" class="b" id="modeP" aria-pressed="true">Pendant</button>
+  <button type="button" class="b" id="modeS" aria-pressed="false">Signet ring</button>
+  <span class="sep"></span>
+  <button type="button" class="b" id="symM" aria-pressed="true">Mirror sides</button>
+  <button type="button" class="b" id="symF" aria-pressed="false">Free shape</button>
+</div>
+
+<div class="read" aria-live="polite">
+  <div><span id="r1L">SHAPE H × W</span><b id="r1">–</b></div>
+  <div><span id="r2L">WITH RING</span><b id="r2">–</b></div>
+  <div><span>THICKNESS</span><b id="r3">–</b></div>
+  <div><span id="r4L">WEIGHT · 14K</span><b id="r4">–</b></div>
+</div>
+
+<div class="bench">
+  <div class="panel stage" id="stage">
+    <div class="views">
+      <button type="button" data-view="front">Front</button>
+      <button type="button" data-view="side">Side</button>
+      <button type="button" data-view="angle">Angle</button>
+    </div>
+    <span class="tag">3D VIEW · DRAG TO TURN</span>
+  </div>
+  <div class="panel gridbox">
+    <svg id="grid" role="img" aria-label="Millimetre grid with the outline and its dots"></svg>
+    <span class="mode" id="modeTag" hidden>TAP THE EDGE WHERE THE RING GOES</span>
+    <span class="tag gtag">GRID · 1 SQUARE = 1 MM</span>
+  </div>
+</div>
+<p class="help">Each dot is a handle on the edge. Drag a dot and the outline bends through it. Tap the edge line to add a dot there. Engraved marks show a small cross you can drag.</p>
+
+<div class="controls">
+  <fieldset>
+    <legend>Shape</legend>
+    <div class="row sel"><label for="preset">Ready-made</label><select id="preset"></select></div>
+    <label class="chk"><input type="checkbox" id="keepDepth"> Keep my depth settings when I switch shape</label>
+    <div class="btns">
+      <button type="button" class="b" id="delPt" disabled>Remove dot</button>
+      <button type="button" class="b" id="sharpPt" aria-pressed="false" disabled>Sharp dot</button>
+      <button type="button" class="b" id="smoothMore">Smooth more</button>
+      <button type="button" class="b" id="organic">Make organic</button>
+    </div>
+    <p class="help" id="selNote">Tap a dot to pick it.</p>
+    <div class="row" data-r="height"></div>
+    <div class="row" data-r="width"></div>
+    <div class="row" data-r="tilt"></div>
+    <div class="row" data-r="soften"></div>
+    <div class="row" data-r="wobble"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Depth and edges</legend>
+    <div class="btns" aria-label="Quick styles">
+      <button type="button" class="b" data-style="pebble">Pebble</button>
+      <button type="button" class="b" data-style="flat">Flat tag</button>
+      <button type="button" class="b" data-style="framed">Framed</button>
+    </div>
+    <div class="row" data-r="thick"></div>
+    <div class="row" data-r="puff"></div>
+    <div class="row" data-r="edgeR"></div>
+    <div class="row" data-r="edgeShape"></div>
+    <div class="row" data-r="side"></div>
+    <div class="row sel"><label for="back">Back</label><select id="back"><option value="puff">Puffed, like front</option><option value="flat">Flat back</option></select></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Border and inner line</legend>
+    <p class="help">Like pin 1: a raised border runs just inside the edge, a thin line sits inside that, and the middle stays lower and blank.</p>
+    <label class="chk"><input type="checkbox" id="rimOn"> Raised border</label>
+    <div class="row" data-r="rimW"></div>
+    <div class="row" data-r="rimH"></div>
+    <div class="row" data-r="rimIn"></div>
+    <div class="row" data-r="sink"></div>
+    <label class="chk"><input type="checkbox" id="frameOn"> Thin inner line inside the border</label>
+    <div class="row" data-r="frameG"></div>
+    <div class="row" data-r="frameW"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Engrave and stamp</legend>
+    <div class="btns">
+      <button type="button" class="b" id="addText">Add letters</button>
+      <button type="button" class="b" id="addSym">Add symbol</button>
+      <button type="button" class="b" id="delMark" disabled>Remove mark</button>
+    </div>
+    <div class="row sel"><label for="markPick">Mark</label><select id="markPick"></select></div>
+    <div class="row sel" id="rowText"><label for="markText">Letters</label><input type="text" id="markText" maxlength="24" autocomplete="off"></div>
+    <div class="row sel" id="rowFont"><label for="markFont">Lettering</label><select id="markFont"><option value="press">Letterpress</option><option value="script">Handwritten</option><option value="type">Typewriter</option></select></div>
+    <div class="row sel" id="rowSym"><label for="markSym">Symbol</label><select id="markSym"></select></div>
+    <div class="row" data-m="mSize"></div>
+    <div class="row" data-m="mX"></div>
+    <div class="row" data-m="mY"></div>
+    <div class="row" data-m="mRot"></div>
+    <div class="row" data-m="mWeight"></div>
+    <div class="row sel"><label for="engStyle">Cut</label><select id="engStyle"><option value="laser">Laser, crisp</option><option value="stamp">Stamped, soft</option></select></div>
+    <div class="row" data-r="engDepth"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Hammered texture</legend>
+    <label class="chk"><input type="checkbox" id="hamOn"> Hammer the face (borders and edges stay smooth)</label>
+    <div class="row" data-r="hamSize"></div>
+    <div class="row" data-r="hamDepth"></div>
+    <div class="row" data-r="hamMove"></div>
+    <div class="row" data-r="hamSeed"></div>
+  </fieldset>
+
+  <fieldset data-mode="pendant">
+    <legend>Ring that holds it</legend>
+    <div class="btns">
+      <button type="button" class="b" id="placeRing" aria-pressed="false">Place ring</button>
+      <button type="button" class="b" id="autoRing">Ring on top</button>
+    </div>
+    <div class="row sel"><label for="ringShape">Ring shape</label><select id="ringShape">
+      <option value="round">Round</option><option value="oval">Oval</option><option value="long">Long oval</option><option value="square">Soft square</option><option value="d">D shape</option><option value="drop">Teardrop</option><option value="none">No ring</option></select></div>
+    <div class="row sel"><label for="ringSit">Sits</label><select id="ringSit"><option value="side">Side-on (slides on)</option><option value="front">Front-facing</option></select></div>
+    <div class="row sel"><label for="chain">Chain</label><select id="chain">
+      <option value="fine">Fine, up to 1 mm</option><option value="std">Cable, 1.5 mm</option><option value="mid">Chain, 2 mm</option><option value="thick">3 mm, or cord</option><option value="custom">Custom size</option></select></div>
+    <div class="row" data-r="ringID"></div>
+    <div class="row" data-r="wire"></div>
+    <div class="row" data-r="ringRatio"></div>
+    <div class="row sel"><label for="ringProf">Wire shape</label><select id="ringProf"><option value="round">Round wire</option><option value="half">Half-round</option><option value="flat">Flat band</option><option value="square">Square wire</option></select></div>
+    <div class="row sel"><label for="attach">Joins by</label><select id="attach"><option value="fused">A fused neck</option><option value="hole">A drilled hole</option></select></div>
+    <div class="row" data-r="neckH"></div>
+    <div class="row" data-r="neckW"></div>
+    <label class="chk"><input type="checkbox" id="archOn"> Arch over the top, like a padlock</label>
+    <div class="row" data-r="archW"></div>
+    <div class="row" data-r="archH"></div>
+    <p class="help">Send me a photo of your signature ring in chat and I'll add it here as its own shape.</p>
+  </fieldset>
+
+  <fieldset data-mode="signet" hidden>
+    <legend>Signet ring</legend>
+    <div class="row" data-r="sigSize"></div>
+    <div class="row" data-r="bandW"></div>
+    <div class="row" data-r="bandT"></div>
+    <div class="row" data-r="shoulder"></div>
+    <p class="help">The face is the shape on the grid. Depth, border, engraving and hammering all work on it.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Cut-out hole</legend>
+    <label class="chk"><input type="checkbox" id="holeOn"> Cut a hole through (key bow, donut, window)</label>
+    <div class="row" data-r="holeR"></div>
+    <div class="row" data-r="holeX"></div>
+    <div class="row" data-r="holeY"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Beads, metal, export</legend>
+    <div class="row sel"><label for="beadMode">Gold beads</label><select id="beadMode"><option value="off">None</option><option value="sides">Sides and bottom</option><option value="sharp">On sharp dots</option><option value="around">All around</option></select></div>
+    <div class="row" data-r="bead"></div>
+    <div class="row" data-r="beadCount"></div>
+    <div class="row sel"><label for="metal">Metal</label><select id="metal"><option value="y14">14k yellow gold</option><option value="y18">18k yellow gold</option><option value="r14">14k rose gold</option><option value="w14">14k white gold</option><option value="s925">925 silver</option></select></div>
+    <div class="row sel"><label for="finish">Finish</label><select id="finish"><option value="polish">High polish</option><option value="soft">Soft polish</option><option value="satin">Satin</option><option value="matte">Matte, sandblasted</option></select></div>
+    <div class="btns">
+      <button type="button" class="b main" id="exportBtn">Export STL</button>
+      <button type="button" class="b" id="copyBtn">Copy shape code</button>
+    </div>
+    <p class="msg" id="msg"></p>
+    <p class="help">Tracing a picture: send it to me in chat and I'll trace it into dots for you.</p>
+  </fieldset>
+</div>
+</div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+// =================== shapes ===================
+const P = (x, y, c) => ({ x: +x.toFixed(2), y: +y.toFixed(2), c: !!c });
+const radial = (f, steps = 16) => { const o = []; for (let i = 0; i <= steps; i++) { const a = Math.PI / 2 - i * Math.PI / steps, r = f(a); o.push(P(Math.max(0, r * Math.cos(a)), r * Math.sin(a))); } o[0].x = 0; o[o.length - 1].x = 0; return o; };
+const superE = (a, b, n, steps = 16) => radial(t => { const c = Math.abs(Math.cos(t)), s = Math.abs(Math.sin(t)); return 1 / Math.pow(Math.pow(c / a, n) + Math.pow(s / b, n), 1 / n); }, steps);
+function star5(ro, ri) { const o = []; for (let k = 0; k <= 5; k++) { const a = Math.PI / 2 - k * Math.PI / 5, r = k % 2 ? ri : ro; o.push(P(Math.max(0, r * Math.cos(a)), r * Math.sin(a), true)); } o[0].x = 0; o[5].x = 0; return o; }
+function quatre() { const rl = 3.9, d = 3.6; return radial(a => { let best = 0; for (const [cx, cy] of [[0, d], [d, 0], [0, -d], [-d, 0]]) { const ux = Math.cos(a), uy = Math.sin(a), b = ux * cx + uy * cy, q = b * b - (cx * cx + cy * cy - rl * rl); if (q >= 0) best = Math.max(best, b + Math.sqrt(q)); } return best; }, 24); }
+function ogee() { const A = [0, 7.5], B = [5.7, 0], L0 = Math.hypot(B[0] - A[0], B[1] - A[1]), d = [(B[0] - A[0]) / L0, (B[1] - A[1]) / L0], nn = [-d[1], d[0]];
+  const s = [[.08, .1], [.24, .42], [.4, .12], [.54, -.28], [.68, .1], [.82, .42], [.94, .1]].map(([t, o]) => [A[0] + t * (B[0] - A[0]) + nn[0] * o, A[1] + t * (B[1] - A[1]) + nn[1] * o]);
+  return [P(0, 7.5, 1), ...s.map(p => P(p[0], p[1])), P(5.7, 0, 1), ...s.slice().reverse().map(p => P(p[0], -p[1])), P(0, -7.5, 1)]; }
+function crescent() { const o = []; for (let i = 0; i <= 18; i++) { const a = (62 + i * (236 / 18)) * Math.PI / 180; o.push(P(7 * Math.cos(a), 7 * Math.sin(a), i === 0 || i === 18)); }
+  for (let i = 1; i < 14; i++) { const a = (243 - i * (126 / 14)) * Math.PI / 180; o.push(P(2.7 + 5.5 * Math.cos(a), 0.4 + 5.5 * Math.sin(a))); } return o; }
+const L = (...a) => a.map(q => P(q[0], q[1], q[2]));
+const HEART = L([0,3.6,1],[1.3,6.2],[3.4,7.3],[5.4,6.6],[6.4,4.1],[5.6,0],[3.4,-3.9],[0,-7.5,1]);
+const SHAPES = [
+  ['From your boards', [
+    ['pebble', 'Pebble', 'pebble', L([0,7.4],[3.6,6.7],[6.4,3.8],[6.9,-0.6],[5.8,-4.7],[3,-7],[0,-7.6])],
+    ['star', 'Puffy star', 'pebble', star5(7.6, 3.7)],
+    ['heart', 'Puffy heart', 'pebble', HEART],
+    ['oval', 'Oval tag', 'flat', L([0,7.5],[2.9,6.6],[4.6,3.9],[5,0],[4.6,-3.9],[2.9,-6.6],[0,-7.5])],
+    ['coin', 'Round coin', 'flat', radial(() => 6, 12)],
+    ['softrect', 'Soft rectangle', 'flat', superE(5, 7, 6)],
+    ['bar', 'Bar', 'flat', superE(3.2, 9, 9, 20)],
+    ['cushion', 'Cushion square', 'pebble', superE(6.5, 6.5, 3.4)],
+    ['cdiamond', 'Cushion diamond', 'pebble', superE(6.3, 7.5, 1.35, 20)],
+    ['octagon', 'Octagon tag', 'flat', L([0,7.5],[3.1,7.5,1],[5.2,5.4,1],[5.2,-5.4,1],[3.1,-7.5,1],[0,-7.5])],
+    ['luggage', 'Luggage tag', 'flat', L([0,8.2],[2.1,8.2,1],[5,5.3,1],[5,-7.1],[4.5,-8],[3.4,-8.2],[0,-8.2])],
+    ['shell', 'Scallop shell', 'pebble', L([0,7.4],[1.3,7.1],[2.1,7.3],[3.4,6.7],[4.2,6.8],[5.3,5.9],[5.9,5.8],[6.7,4.4],[7,4],[7.1,2.6],[5.1,-2],[3,-5],[2.1,-5.8,1],[3.2,-6.6],[3,-7.5,1],[0,-7.5])],
+    ['lantern', 'Moroccan lantern', 'pebble', L([0,8,1],[0.9,7.35],[2.9,6.6],[4.9,5.6],[6,4.6,1],[5.7,2.3],[5.75,0],[5.7,-2.3],[6,-4.6,1],[4.9,-5.6],[2.9,-6.6],[0.9,-7.35],[0,-8,1])],
+    ['ogee', 'Ogee lozenge', 'framed', ogee(), { beadMode: 'sides' }]
+  ]],
+  ['Keys and locks', [
+    ['lockheart', 'Padlock heart', 'pebble', HEART, { archOn: true, archW: 6.6, archH: 4.2 }],
+    ['key', 'Little key', 'flat', L([0,8.6],[2.9,7.9],[4.2,5.4],[3.6,2.6],[1.4,1.1],[1.2,-4.4],[2.9,-4.6,1],[2.9,-5.7,1],[1.2,-5.8,1],[1.2,-6.5,1],[2.5,-6.6,1],[2.5,-7.8,1],[1.2,-7.9,1],[0.9,-8.6],[0,-8.7],[-0.9,-8.6],[-1.2,-7.9],[-1.2,1.1],[-3.6,2.6],[-4.2,5.4],[-2.9,7.9]), { holeOn: true, holeR: 1.7, holeX: 0, holeY: 5.1 }],
+    ['donut', 'Round with a window', 'pebble', radial(() => 6.5, 12), { holeOn: true, holeR: 2.4, holeX: 0, holeY: 0 }]
+  ]],
+  ['Classic', [
+    ['longpebble', 'Long pebble', 'pebble', L([0,8.2],[2.6,7.4],[4.1,4.6],[4.4,0.2],[4,-4.5],[2.5,-7.4],[0,-8.2])],
+    ['drop', 'Drop', 'pebble', L([0,7.8,1],[1.6,4.9],[4.4,1.2],[5.3,-2.4],[4.3,-5.6],[2.3,-7.2],[0,-7.6])],
+    ['almond', 'Almond', 'pebble', L([0,7.5,1],[2.6,5.4],[4.4,2.4],[4.8,0],[4.4,-2.4],[2.6,-5.4],[0,-7.5,1])],
+    ['quatre', 'Quatrefoil', 'pebble', quatre()],
+    ['flower', 'Five petals', 'pebble', radial(a => 5.2 + 2.1 * Math.pow(Math.abs(Math.cos(2.5 * (a - Math.PI / 2))), 0.7), 30)],
+    ['cloud', 'Cloud', 'pebble', radial(a => 6.1 + 0.85 * Math.cos(8 * (a - Math.PI / 2)), 32)],
+    ['arch', 'Arch', 'flat', L([0,7.5],[3.3,6.7],[5.2,4],[5.6,0],[5.6,-7.5,1],[0,-7.5])],
+    ['shield', 'Shield', 'flat', L([0,7.2],[5.8,7.5,1],[6,2],[4.6,-3.6],[2.3,-6.2],[0,-7.6,1])]
+  ]],
+  ['Free, no mirror', [
+    ['crescent', 'Crescent moon', 'pebble', crescent()],
+    ['molten', 'Molten pebble', 'pebble', L([-1,7.4],[3.6,6.6],[6.4,3.2],[5.6,-1.4],[6.6,-4.6],[3.8,-7.4],[-0.8,-7],[-4.6,-5.2],[-6.6,-1.4],[-5,1.6],[-5.6,5])],
+    ['crooked', 'Crooked heart', 'pebble', L([-0.3,3.9,1],[-1.8,6.4],[-3.9,7],[-6,5.8],[-6.5,2.8],[-5.1,-1],[-2.4,-4.6],[0.5,-7.6,1],[3,-4.2],[5.4,-0.4],[6.6,3.6],[5.6,6.4],[3.4,7.2],[1.4,6.3])],
+    ['wave', 'Wave pebble', 'pebble', L([0,7.2],[3.8,6.4],[6,3.4],[6.4,-0.8],[5,-4.8],[1.8,-7.2],[-2.6,-7],[-5.6,-4.6],[-6.6,-0.4],[-5.2,3.2],[-2.8,6])]
+  ]]
+];
+const FREE = new Set(['crescent', 'molten', 'crooked', 'wave', 'key']);
+const SHAPE = {}; for (const [, list] of SHAPES) for (const [k, name, style, pts, extra] of list) SHAPE[k] = { name, style, pts, extra: extra || {} };
+const SHAPE_RESET = { archOn: false, holeOn: false, beadMode: 'off' };
+const STYLES = {
+  pebble: { thick: 1.3, puff: 0.6, edgeR: 1.6, edgeShape: 1, side: 0, back: 'puff', rimOn: false, frameOn: false, sink: 0 },
+  flat: { thick: 1.2, puff: 0, edgeR: 0.45, edgeShape: 0.9, side: 0.4, back: 'flat', rimOn: false, frameOn: false, sink: 0 },
+  framed: { thick: 1.3, puff: 0, edgeR: 0.35, edgeShape: 0.9, side: 0.55, back: 'flat', rimOn: true, rimW: 0.55, rimH: 0.28, rimIn: 0.3, sink: 0.08, frameOn: true, frameG: 0.45, frameW: 0.35 }
+};
+const SYMS = {
+  star: ['Twinkle star', 'M12 2.9C12.6 7.7 14.1 10.3 19.5 11.5C14.2 12.8 12.6 15.3 12 21.1C11.3 15.4 9.7 12.9 4.5 11.7C9.8 10.4 11.4 7.9 12 2.9Z'],
+  moon: ['Moon', 'M15.6 3.6C10.6 3.9 6.6 7.7 6.6 12.5C6.6 17.4 10.6 20.9 15.5 20.6C16.3 20.5 16.6 20 16 19.7C12.8 18.1 10.9 15.3 11 12C11.1 8.8 13 6.1 16 4.6C16.6 4.3 16.3 3.6 15.6 3.6Z'],
+  sun: ['Sun', 'M12.1 8.2C14.3 8.1 15.9 9.8 15.8 12C15.7 14.2 14.1 15.9 11.9 15.8C9.8 15.7 8.2 14.1 8.3 11.9C8.4 9.9 9.9 8.4 12.3 8.1M12 2.7C11.9 3.8 12.1 4.6 12 5.6M12.1 18.5C12 19.5 12.1 20.3 11.9 21.3M2.8 12.1C3.8 11.9 4.7 12.1 5.6 12M18.4 11.9C19.4 12 20.3 11.9 21.2 12.1M5.5 5.5C6.1 6.1 6.6 6.6 7.2 7.3M16.8 16.7C17.4 17.3 17.9 17.9 18.5 18.5M18.5 5.5C17.9 6 17.3 6.6 16.8 7.2M7.2 16.8C6.6 17.4 6 17.9 5.5 18.5'],
+  heart: ['Heart', 'M12 20.4C8.8 17.6 5.6 14.4 5.6 9.9C5.6 7.2 7.2 5.3 9.1 5.3C10.7 5.3 11.6 6.8 12 9.4C12.4 6.8 13.3 5.3 14.9 5.3C16.8 5.3 18.4 7.2 18.4 9.9C18.4 14.4 15.2 17.6 12 20.4Z'],
+  wave: ['Wave', 'M2 9c3-3 5 3 8 0s5 3 8 0 3-1 4 0M2 15c3-3 5 3 8 0s5 3 8 0 3-1 4 0'],
+  eye: ['Eye', 'M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12zM12 9.5a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5z'],
+  leaf: ['Leaf', 'M5 19C5 9 11 4 20 4c0 9-5 15-15 15zM5 19L14 10'],
+  shell: ['Shell', 'M12 21L4 9a8 8 0 0 1 16 0zM12 21V5M12 21L8 7M12 21l4-14'],
+  flower: ['Little flower', 'M12 10.2a1.8 1.8 0 1 0 0 3.6a1.8 1.8 0 1 0 0-3.6zM12 10C10.5 7 10.8 4.3 12 3.6C13.2 4.3 13.5 7 12 10M13.8 11.4C16.3 9.3 19 8.9 19.8 10C19.4 11.4 16.9 12.5 13.8 11.4M13.1 13.7C14.9 16.4 15.2 19 14.1 19.9C12.7 19.6 11.9 17 13.1 13.7M10.9 13.7C9.1 16.4 8.8 19 9.9 19.9C11.3 19.6 12.1 17 10.9 13.7M10.2 11.4C7.7 9.3 5 8.9 4.2 10C4.6 11.4 7.1 12.5 10.2 11.4'],
+  key: ['Key', 'M8 5.5a3.5 3.5 0 1 0 0 7a3.5 3.5 0 1 0 0-7zM11.4 9H21M18 9v3.5M15.5 9v2.5'],
+  arrow: ['Arrow', 'M3 12H20M16 8l4 4-4 4M3 9l2 3-2 3'],
+  cross: ['Kiss x', 'M7 7l10 10M17 7L7 17']
+};
+const FONTS = { press: "'IM Fell English SC', Georgia, serif", script: "'Homemade Apple', cursive", type: "'Cutive Mono', 'Courier New', monospace" };
+
+// =================== controls ===================
+const SPEC = {
+  height: ['Height', 4, 40, 0.1, 'mm'], width: ['Width', 3, 35, 0.1, 'mm'], tilt: ['Tilt', -180, 180, 1, '°'], soften: ['Soften points', 0, 1.5, 0.01, 'mm'], wobble: ['Organic wobble', 0, 0.6, 0.01, 'mm'],
+  thick: ['Thickness', 0.4, 4, 0.05, 'mm'], puff: ['Puff (pebble)', 0, 3, 0.05, 'mm'], edgeR: ['Edge round', 0, 3, 0.05, 'mm'], edgeShape: ['Edge shape', 0, 1, 0.05, ''], side: ['Straight side', 0, 3, 0.05, 'mm'],
+  rimW: ['Border width', 0.2, 2.5, 0.05, 'mm'], rimH: ['Border height', 0.05, 1, 0.01, 'mm'], rimIn: ['Border from edge', 0, 2, 0.05, 'mm'], sink: ['Lower middle', 0, 0.8, 0.01, 'mm'],
+  frameG: ['Line gap', 0.1, 2.5, 0.05, 'mm'], frameW: ['Line width', 0.15, 1.2, 0.05, 'mm'],
+  engDepth: ['Engrave depth', 0.02, 0.4, 0.01, 'mm'],
+  hamSize: ['Dent size', 0.3, 4, 0.05, 'mm'], hamDepth: ['Dent depth', 0.01, 0.3, 0.005, 'mm'], hamMove: ['Move texture', 0, 10, 0.05, ''], hamSeed: ['Pattern', 1, 50, 1, ''],
+  ringID: ['Inner opening', 1.5, 8, 0.1, 'mm'], wire: ['Wire thickness', 0.4, 2, 0.05, 'mm'], ringRatio: ['Ring height', 0.6, 2.2, 0.05, '×'],
+  neckH: ['Neck height', 0, 4, 0.05, 'mm'], neckW: ['Neck width', 0.3, 3, 0.05, 'mm'], archW: ['Arch width', 2, 16, 0.1, 'mm'], archH: ['Arch height', 1, 10, 0.1, 'mm'],
+  holeR: ['Hole size', 0.4, 6, 0.05, 'mm'], holeX: ['Hole left/right', -15, 15, 0.05, 'mm'], holeY: ['Hole up/down', -15, 15, 0.05, 'mm'],
+  bead: ['Bead size', 0.3, 2.5, 0.05, 'mm'], beadCount: ['Bead count', 3, 40, 1, ''],
+  sigSize: ['Ring size (US)', 2, 14, 0.25, ''], bandW: ['Band width', 1.2, 6, 0.05, 'mm'], bandT: ['Band thickness', 0.8, 3, 0.05, 'mm'], shoulder: ['Shoulder', 0.3, 3, 0.05, '']
+};
+const MSPEC = { mSize: ['Size', 0.8, 14, 0.1, 'mm'], mX: ['Left/right', -15, 15, 0.05, 'mm'], mY: ['Up/down', -15, 15, 0.05, 'mm'], mRot: ['Turn', -180, 180, 1, '°'], mWeight: ['Line weight', 0.1, 1.2, 0.02, 'mm'] };
+const SELECTS = ['back', 'ringShape', 'ringSit', 'chain', 'ringProf', 'attach', 'metal', 'finish', 'beadMode', 'engStyle'];
+const CHECKS = ['rimOn', 'frameOn', 'hamOn', 'keepDepth', 'archOn', 'holeOn'];
+const DEFAULTS = { tilt: 0, soften: 0.3, wobble: 0, thick: 1.3, puff: 0.6, edgeR: 1.6, edgeShape: 1, side: 0, rimW: 0.55, rimH: 0.28, rimIn: 0.3, sink: 0.08, frameG: 0.45, frameW: 0.35, engDepth: 0.12,
+  hamSize: 1.2, hamDepth: 0.06, hamMove: 0, hamSeed: 7, ringID: 3, wire: 0.8, ringRatio: 1, neckH: 1.2, neckW: 1.1, archW: 6.6, archH: 4.2, holeR: 1.8, holeX: 0, holeY: 0, bead: 1, beadCount: 12,
+  sigSize: 6, bandW: 2.4, bandT: 1.5, shoulder: 1.2, back: 'puff', ringShape: 'round', ringSit: 'side', chain: 'std', ringProf: 'round', attach: 'fused', metal: 'y14', finish: 'soft', beadMode: 'off', engStyle: 'laser',
+  rimOn: false, frameOn: false, hamOn: false, keepDepth: false, archOn: false, holeOn: false, mSize: 5, mX: 0, mY: 0, mRot: 0, mWeight: 0.4 };
+const CHAIN = { fine: 2.5, std: 3, mid: 3.6, thick: 4.5 };
+const $ = id => document.getElementById(id);
+function rowHTML(id, spec) { const [lab, min, max, step, unit] = spec;
+  return `<label for="${id}">${lab}${unit === '°' ? ' (°)' : ''}</label><input type="range" id="${id}" min="${min}" max="${max}" step="${step}"><input type="number" id="${id}N" min="${min}" max="${max}" step="${step}" inputmode="decimal" aria-label="${lab}${unit ? ' in ' + unit : ''}">`; }
+for (const el of document.querySelectorAll('[data-r]')) el.innerHTML = rowHTML(el.dataset.r, SPEC[el.dataset.r]);
+for (const el of document.querySelectorAll('[data-m]')) el.innerHTML = rowHTML(el.dataset.m, MSPEC[el.dataset.m]);
+for (const [k, [name]] of Object.entries(SYMS)) { const o = document.createElement('option'); o.value = k; o.textContent = name; $('markSym').append(o); }
+const num = id => parseFloat($(id).value);
+function readAll() { const o = {}; for (const k in SPEC) o[k] = num(k); for (const k of SELECTS) o[k] = $(k).value; for (const k of CHECKS) o[k] = $(k).checked; return o; }
+function writeAll(o) { for (const k in o) { if (!$(k)) continue; if (CHECKS.includes(k)) $(k).checked = o[k]; else $(k).value = o[k]; if (SPEC[k] || MSPEC[k]) $(k + 'N').value = +(+o[k]).toFixed(3); } }
+
+// =================== state + history ===================
+const S = { key: 'pebble', name: 'Pebble', sym: true, pts: [], sel: -1, mode: 'pendant', seed: 3, ringAt: null, marks: [], msel: -1, placing: false };
+const H = { st: [], i: -1 };
+function snap() { return JSON.stringify({ key: S.key, name: S.name, sym: S.sym, pts: S.pts, mode: S.mode, seed: S.seed, ringAt: S.ringAt, marks: S.marks, v: readAll() }); }
+function commit() { const s = snap(); if (H.st[H.i] === s) return; H.st = H.st.slice(0, H.i + 1); H.st.push(s); if (H.st.length > 150) H.st.shift(); H.i = H.st.length - 1; histBtns(); }
+function restore(s) { const o = JSON.parse(s); Object.assign(S, { key: o.key, name: o.name, sym: o.sym, pts: o.pts, mode: o.mode, seed: o.seed, ringAt: o.ringAt, marks: o.marks, sel: -1, msel: Math.min(S.msel, o.marks.length - 1) }); writeAll(o.v); syncUI(); syncMarks(); rebuild(false); }
+function histBtns() { $('undo').disabled = H.i <= 0; $('redo').disabled = H.i >= H.st.length - 1; }
+$('undo').onclick = () => { if (H.i > 0) { H.i--; restore(H.st[H.i]); histBtns(); } };
+$('redo').onclick = () => { if (H.i < H.st.length - 1) { H.i++; restore(H.st[H.i]); histBtns(); } };
+addEventListener('keydown', e => { if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== 'z' || e.target.matches('input')) return; e.preventDefault(); (e.shiftKey ? $('redo') : $('undo')).click(); });
+
+// =================== outline maths ===================
+function fullPts() { if (!S.sym) return S.pts; const h = S.pts; return h.concat(h.slice(1, -1).reverse().map(q => ({ x: -q.x, y: q.y, c: q.c }))); }
+function cr(p0, p1, p2, p3, u) {
+  const k = (a, b) => Math.max(1e-4, Math.sqrt(Math.hypot(b.x - a.x, b.y - a.y)));
+  const t0 = 0, t1 = k(p0, p1), t2 = t1 + k(p1, p2), t3 = t2 + k(p2, p3), t = t1 + (t2 - t1) * u;
+  const l = (a, b, ta, tb) => ({ x: ((tb - t) * a.x + (t - ta) * b.x) / (tb - ta), y: ((tb - t) * a.y + (t - ta) * b.y) / (tb - ta) });
+  const A1 = l(p0, p1, t0, t1), A2 = l(p1, p2, t1, t2), A3 = l(p2, p3, t2, t3);
+  return l(l(A1, A2, t0, t2), l(A2, A3, t1, t3), t1, t2);
+}
+function run(R, closed) {
+  const out = [], m = R.length, n = closed ? m : m - 1;
+  const at = i => closed ? R[(i % m + m) % m] : i < 0 ? { x: 2 * R[0].x - R[1].x, y: 2 * R[0].y - R[1].y } : i >= m ? { x: 2 * R[m - 1].x - R[m - 2].x, y: 2 * R[m - 1].y - R[m - 2].y } : R[i];
+  for (let i = 0; i < n; i++) { const p1 = at(i), p2 = at(i + 1), len = Math.hypot(p2.x - p1.x, p2.y - p1.y); if (len < 1e-6) continue;
+    const st = Math.max(6, Math.ceil(len / 0.08)); for (let s = 0; s < st; s++) { const q = cr(at(i - 1), p1, p2, at(i + 2), s / st); out.push([q.x, q.y]); } }
+  return out;
+}
+function sample(pts) {
+  const sh = pts.map((p, i) => p.c ? i : -1).filter(i => i >= 0);
+  if (!sh.length) return dedupe(run(pts, true));
+  const n = pts.length, out = [];
+  for (let k = 0; k < sh.length; k++) { const a = sh[k], b = sh[(k + 1) % sh.length], R = [];
+    for (let i = a; ; i = (i + 1) % n) { R.push(pts[i]); if (i === b && R.length > 1) break; if (R.length > n + 1) break; }
+    out.push(...run(R, false)); }
+  return dedupe(out);
+}
+function dedupe(a) { const o = []; for (const p of a) { const l = o[o.length - 1]; if (!l || Math.hypot(p[0] - l[0], p[1] - l[1]) > 0.01) o.push(p); }
+  while (o.length > 2 && Math.hypot(o[0][0] - o[o.length - 1][0], o[0][1] - o[o.length - 1][1]) < 0.01) o.pop(); return o; }
+function area(a) { let s = 0; for (let i = 0; i < a.length; i++) { const p = a[i], q = a[(i + 1) % a.length]; s += p[0] * q[1] - q[0] * p[1]; } return s / 2; }
+function bbox(a) { let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; for (const [x, y] of a) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } return { x0, x1, y0, y1, w: x1 - x0, h: y1 - y0 }; }
+function resample(a, step) {
+  const n = a.length, cum = [0]; for (let i = 1; i <= n; i++) cum.push(cum[i - 1] + Math.hypot(a[i % n][0] - a[i - 1][0], a[i % n][1] - a[i - 1][1]));
+  const tot = cum[n], m = Math.max(16, Math.round(tot / step)), o = []; let j = 0;
+  for (let k = 0; k < m; k++) { const s = k * tot / m; while (cum[j + 1] < s) j++; const u = (s - cum[j]) / ((cum[j + 1] - cum[j]) || 1), p = a[j], q = a[(j + 1) % n]; o.push([p[0] + (q[0] - p[0]) * u, p[1] + (q[1] - p[1]) * u]); }
+  return o;
+}
+function normals(a) { const sg = area(a) > 0 ? 1 : -1, n = a.length; return a.map((c, i) => { const p = a[(i - 1 + n) % n], q = a[(i + 1) % n], tx = q[0] - p[0], ty = q[1] - p[1], l = Math.hypot(tx, ty) || 1; return [ty / l * sg, -tx / l * sg]; }); }
+function wobble(a, amp, seed) {
+  if (amp <= 0) return a; const nr = normals(a), n = a.length;
+  return a.map((c, i) => { const u = i / n * Math.PI * 2, w = (Math.sin(3 * u + seed) + 0.6 * Math.sin(7 * u + seed * 2.3) + 0.35 * Math.sin(13 * u + seed * 0.7)) / 1.95; return [c[0] + nr[i][0] * w * amp, c[1] + nr[i][1] * w * amp]; });
+}
+function gauss(a, sigma) {
+  const st = 0.04, r = resample(a, st); if (sigma < 0.01) return resample(r, 0.09);
+  const k = sigma / st, rad = Math.ceil(3 * k), w = []; let ws = 0; for (let i = -rad; i <= rad; i++) { const v = Math.exp(-i * i / (2 * k * k)); w.push(v); ws += v; }
+  const n = r.length, o = r.map((_, i) => { let x = 0, y = 0; for (let j = -rad; j <= rad; j++) { const q = r[((i + j) % n + n) % n], v = w[j + rad]; x += q[0] * v; y += q[1] * v; } return [x / ws, y / ws]; });
+  return resample(o, 0.09);
+}
+const rot = (p, deg) => { const a = deg * Math.PI / 180, c = Math.cos(a), s = Math.sin(a); return [p[0] * c - p[1] * s, p[0] * s + p[1] * c]; };
+function nearest(a, q) { let b = 0, bd = 1e18; a.forEach((p, i) => { const d = (p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2; if (d < bd) { bd = d; b = i; } }); return a[b]; }
+function baseLine(v) { return wobble(sample(fullPts()), v.wobble, S.seed).map(p => rot(p, v.tilt)); }
+function anchorPt(v, raw) {
+  if (S.ringAt) return nearest(raw, S.ringAt);
+  if (Math.abs(v.tilt) < 0.5) { let d; if (S.sym) d = [0, S.pts[0].y]; else { const t = S.pts.reduce((a, p) => p.y > a.y ? p : a, S.pts[0]); d = [t.x, t.y]; } return nearest(raw, d); }
+  return raw.reduce((a, p) => p[1] > a[1] ? p : a, raw[0]);
+}
+function neck(a, an, nh, nw) {
+  if (nh <= 0) return a; const nr = normals(a);
+  return a.map((p, i) => { if (p[1] < an[1] - 2.5 * nw - 0.5) return p; const dx = p[0] - an[0], g = Math.exp(-dx * dx / (nw * nw)), f = Math.max(0, Math.min(1, (nr[i][1] - 0.05) / 0.6)); return [p[0], p[1] + nh * g * f]; });
+}
+const ringOn = v => S.mode === 'pendant' && v.ringShape !== 'none';
+function outlines(v) {
+  const raw = baseLine(v), an = anchorPt(v, raw), base = gauss(raw, Math.max(0.04, v.soften));
+  const necked = ringOn(v) && v.attach === 'fused' && !v.archOn;
+  return { raw, an, base, full: necked ? gauss(neck(raw, an, v.neckH, v.neckW), Math.max(0.04, v.soften)) : base };
+}
+function holeLoop(v) { const o = []; for (let i = 0; i < 64; i++) { const a = -i / 64 * Math.PI * 2; o.push([v.holeX + v.holeR * Math.cos(a), v.holeY + v.holeR * Math.sin(a)]); } return o; }
+
+// =================== solid from a height map ===================
+function hashf(i, j, s) { let h = (i * 374761393 + j * 668265263 + s * 2147483647) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967295; }
+function dentAt(x, y, v) {
+  const c = v.hamSize, X = x / c + v.hamMove * 0.37, Y = y / c + v.hamMove * 0.21, ci = Math.floor(X), cj = Math.floor(Y); let best = 9;
+  for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) { const i = ci + di, j = cj + dj, px = i + 0.15 + 0.7 * hashf(i, j, v.hamSeed), py = j + 0.15 + 0.7 * hashf(j, i, v.hamSeed + 9), d = (X - px) ** 2 + (Y - py) ** 2; if (d < best) best = d; }
+  const r = Math.sqrt(best) / 0.68; return r >= 1 ? 0 : v.hamDepth * (1 - r * r);
+}
+const sm = (a, b, x) => { if (b <= a) return x >= b ? 1 : 0; const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+function band(d, a, w) { const e = Math.min(0.18, w * 0.35); return sm(a, a + e, d) * (1 - sm(a + w - e, a + w, d)); }
+function body(loops, v, coarse, mask) {
+  const poly = loops[0], b = bbox(poly), areaMM = Math.abs(area(poly));
+  let h = Math.max(0.08, Math.min(0.22, Math.max(b.w, b.h) / 130)); if (v.hamOn) h = Math.min(h, Math.max(0.06, v.hamSize / 6)); if (mask) h = Math.min(h, 0.07);
+  h = Math.max(h, Math.sqrt(areaMM / 32000)); if (coarse) h *= 1.9;
+  const pad = 2 * h, x0 = b.x0 - pad, y0 = b.y0 - pad, nx = Math.ceil((b.w + 2 * pad) / h) + 1, ny = Math.ceil((b.h + 2 * pad) / h) + 1;
+  const segs = []; for (const lp of loops) for (let k = 0; k < lp.length; k++) segs.push([lp[k], lp[(k + 1) % lp.length]]);
+  const n = segs.length, ax = new Float64Array(n), ay = new Float64Array(n), ex = new Float64Array(n), ey = new Float64Array(n), ll = new Float64Array(n);
+  segs.forEach(([p, q], k) => { ax[k] = p[0]; ay[k] = p[1]; ex[k] = q[0] - p[0]; ey[k] = q[1] - p[1]; ll[k] = ex[k] * ex[k] + ey[k] * ey[k] || 1e-9; });
+  const sdf = new Float64Array(nx * ny); let dmax = 0;
+  for (let j = 0; j < ny; j++) { const py = y0 + j * h;
+    for (let i = 0; i < nx; i++) { const px = x0 + i * h; let best = 1e18, ins = false;
+      for (let k = 0; k < n; k++) { const qx = px - ax[k], qy = py - ay[k]; let t = (qx * ex[k] + qy * ey[k]) / ll[k]; t = t < 0 ? 0 : t > 1 ? 1 : t; const dx = qx - t * ex[k], dy = qy - t * ey[k], d2 = dx * dx + dy * dy; if (d2 < best) best = d2;
+        const by = ay[k] + ey[k]; if ((ay[k] > py) !== (by > py) && px < ex[k] * (py - ay[k]) / ey[k] + ax[k]) ins = !ins; }
+      const d = Math.sqrt(best); sdf[j * nx + i] = ins ? d : -d; if (ins && d > dmax) dmax = d; } }
+  const half = v.thick / 2, sd = Math.min(v.side, v.thick) / 2, wall = sd > 0.002 || v.edgeR <= 0.001;
+  const edge = d => { if (v.edgeR <= 0.001) return 1; const u = Math.min(d / v.edgeR, 1), r = Math.sqrt(1 - (1 - u) * (1 - u)); return u + (r - u) * v.edgeShape; };
+  const puff = d => { const u = Math.min(d / Math.max(dmax, 0.01), 1); return v.puff * (1 - (1 - u) * (1 - u)); };
+  const rS = v.rimIn, rE = rS + v.rimW, fS = rE + v.frameG, fE = fS + v.frameW;
+  const faceStart = v.rimOn ? (v.frameOn ? fE : rE) : Math.max(0.2, v.edgeR * 0.85);
+  const eng = v.engDepth * (v.engStyle === 'stamp' ? 1.5 : 1);
+  const zt = (x, y, d) => { let z = sd + (half - sd) * edge(d) + puff(d);
+    if (v.rimOn) { z += v.rimH * band(d, rS, v.rimW) - v.sink * sm(rE, rE + 0.25, d); if (v.frameOn) z += v.rimH * 0.8 * band(d, fS, v.frameW); }
+    if (v.hamOn) z -= dentAt(x, y, v) * sm(faceStart + 0.1, faceStart + 0.55, d);
+    if (mask) z -= eng * mask(x, y) * sm(0.1, 0.35, d);
+    return z; };
+  const zb = d => -(sd + (half - sd) * edge(d) + (v.back === 'puff' ? puff(d) : 0));
+  const V = [], node = new Int32Array(nx * ny).fill(-1), hx = new Map(), vy = new Map(), contour = [], T = [];
+  const nodeV = (i, j) => { const k = j * nx + i; if (node[k] < 0) { node[k] = V.length; V.push([x0 + i * h, y0 + j * h, sdf[k], 0]); } return node[k]; };
+  const cross = (i1, j1, i2, j2) => { const horiz = j1 === j2, key = horiz ? j1 * nx + Math.min(i1, i2) : Math.min(j1, j2) * nx + i1, M = horiz ? hx : vy;
+    if (M.has(key)) return M.get(key); const s1 = sdf[j1 * nx + i1], s2 = sdf[j2 * nx + i2], t = s1 / (s1 - s2);
+    const id = V.length; V.push([x0 + (i1 + (i2 - i1) * t) * h, y0 + (j1 + (j2 - j1) * t) * h, 0, 1]); M.set(key, id); return id; };
+  for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
+    const C = [[i, j], [i + 1, j], [i + 1, j + 1], [i, j + 1]], s = C.map(([a, c]) => sdf[c * nx + a] > 0), cnt = s.filter(Boolean).length;
+    if (!cnt) continue;
+    if (cnt === 4) { const q = C.map(([a, c]) => nodeV(a, c)); T.push([q[0], q[1], q[2]], [q[0], q[2], q[3]]); continue; }
+    const polys = [];
+    if (cnt === 2 && s[0] === s[2] && (sdf[j * nx + i] + sdf[j * nx + i + 1] + sdf[(j + 1) * nx + i] + sdf[(j + 1) * nx + i + 1]) / 4 <= 0) {
+      for (let k = 0; k < 4; k++) if (s[k]) { const pr = (k + 3) % 4, n2 = (k + 1) % 4; polys.push([cross(...C[pr], ...C[k]), nodeV(...C[k]), cross(...C[k], ...C[n2])]); }
+    } else { const p = []; for (let k = 0; k < 4; k++) { const k2 = (k + 1) % 4; if (s[k]) p.push(nodeV(...C[k])); if (s[k] !== s[k2]) p.push(cross(...C[k], ...C[k2])); } polys.push(p); }
+    for (const p of polys) { for (let k = 1; k < p.length - 1; k++) T.push([p[0], p[k], p[k + 1]]);
+      let cx = 0, cy = 0, cn = 0; for (const q of p) if (!V[q][3]) { cx += V[q][0]; cy += V[q][1]; cn++; } cx /= cn || 1; cy /= cn || 1;
+      for (let k = 0; k < p.length; k++) { const a = p[k], c = p[(k + 1) % p.length]; if (V[a][3] && V[c][3]) contour.push([a, c, cx, cy]); } }
+  }
+  const N = V.length, pos = new Float32Array(N * 6);
+  for (let k = 0; k < N; k++) { const [x, y, d] = V[k], dd = Math.max(0, d); pos.set([x, y, zt(x, y, dd)], k * 3); pos.set([x, y, zb(dd)], (N + k) * 3); }
+  const bi = k => (!wall && V[k][3]) ? k : N + k, idx = [];
+  for (const [a, b2, c] of T) { idx.push(a, b2, c); idx.push(bi(a), bi(c), bi(b2)); }
+  if (wall) for (const [a, c, cx, cy] of contour) { const A = V[a], C2 = V[c], ox = (A[0] + C2[0]) / 2 - cx, oy = (A[1] + C2[1]) / 2 - cy, exv = C2[0] - A[0], eyv = C2[1] - A[1];
+    if (eyv * ox - exv * oy >= 0) idx.push(a, N + a, c, c, N + a, N + c); else idx.push(a, c, N + a, c, N + c, N + a); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setIndex(idx); fixWinding(g); g.computeVertexNormals();
+  return { g, dmax };
+}
+
+// =================== engraving mask (letters and symbols) ===================
+function markMask(marks, b, stamp) {
+  if (!marks.length || typeof document === 'undefined') return null;
+  const s = 18, W = Math.ceil((b.w + 4) * s), Hh = Math.ceil((b.h + 4) * s), X0 = b.x0 - 2, Y1 = b.y1 + 2;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = Hh; const ctx = cv.getContext('2d'); ctx.fillStyle = '#000'; ctx.strokeStyle = '#000';
+  if (stamp && 'filter' in ctx) ctx.filter = 'blur(' + (0.06 * s).toFixed(1) + 'px)';
+  for (const m of marks) { ctx.save(); ctx.translate((m.x - X0) * s, (Y1 - m.y) * s); ctx.rotate(-m.rot * Math.PI / 180);
+    if (m.type === 'text') { ctx.font = `${m.size * s}px ${FONTS[m.font]}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(m.text || '', 0, 0); }
+    else { const k = m.size / 24 * s; ctx.scale(k, k); ctx.translate(-12, -12); ctx.lineWidth = m.weight * s / k; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke(new Path2D(SYMS[m.sym][1])); }
+    ctx.restore(); }
+  const A = ctx.getImageData(0, 0, W, Hh).data;
+  return (x, y) => { const fx = (x - X0) * s - 0.5, fy = (Y1 - y) * s - 0.5, i = Math.floor(fx), j = Math.floor(fy); if (i < 0 || j < 0 || i >= W - 1 || j >= Hh - 1) return 0;
+    const u = fx - i, w = fy - j, a = k => A[k * 4 + 3] / 255, p = j * W + i; return (a(p) * (1 - u) + a(p + 1) * u) * (1 - w) + (a(p + W) * (1 - u) + a(p + W + 1) * u) * w; };
+}
+
+// =================== ring, arch, beads, signet band ===================
+function sweep(path, closed, sec) {
+  const M = path.length, Q = sec.length, pos = new Float32Array(M * Q * 3 + (closed ? 0 : 6)), idx = [];
+  path.forEach((f, m) => sec.forEach(([a, bb], q) => { const o = (m * Q + q) * 3; pos[o] = f.p.x + f.n.x * a + f.b.x * bb; pos[o + 1] = f.p.y + f.n.y * a + f.b.y * bb; pos[o + 2] = f.p.z + f.n.z * a + f.b.z * bb; }));
+  const mm = closed ? M : M - 1; for (let m = 0; m < mm; m++) for (let q = 0; q < Q; q++) { const a = m * Q + q, b = ((m + 1) % M) * Q + q, c = ((m + 1) % M) * Q + (q + 1) % Q, d = m * Q + (q + 1) % Q; idx.push(a, b, c, a, c, d); }
+  if (!closed) { const c0 = M * Q, c1 = c0 + 1; pos.set([path[0].p.x, path[0].p.y, path[0].p.z, path[M - 1].p.x, path[M - 1].p.y, path[M - 1].p.z], M * Q * 3);
+    for (let q = 0; q < Q; q++) { idx.push(c0, (q + 1) % Q, q); idx.push(c1, (M - 1) * Q + q, (M - 1) * Q + (q + 1) % Q); } }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setIndex(idx); fixWinding(g); g.computeVertexNormals(); return g;
+}
+function section(kind, tr, ta, Q = 22) { const o = []; for (let q = 0; q < Q; q++) { const f = q / Q * Math.PI * 2, c = Math.cos(f), s = Math.sin(f);
+  if (kind === 'square' || kind === 'flat') { const e = kind === 'flat' ? 0.4 : 0.32; o.push([Math.sign(c) * Math.pow(Math.abs(c), e) * tr / 2, Math.sign(s) * Math.pow(Math.abs(s), e) * ta / 2]); }
+  else if (kind === 'half') o.push([c < 0 ? c * tr * 0.12 : c * tr / 2, s * ta / 2]); else o.push([c * tr / 2, s * ta / 2]); } return o; }
+function wireDims(v) { const flat = v.ringProf === 'flat'; return { tr: flat ? v.wire * 0.62 : v.wire, ta: flat ? v.wire * 2.1 : v.wire }; }
+function ringPath(v, ax, baseY) {
+  const { tr, ta } = wireDims(v), ratio = v.ringShape === 'long' ? Math.max(v.ringRatio, 1.5) : v.ringShape === 'round' ? 1 : v.ringRatio;
+  const Rx = v.ringID / 2 + tr / 2, Ry = Rx * ratio, M = 120, c2 = [];
+  for (let m = 0; m < M; m++) { const t = m / M * Math.PI * 2 - Math.PI / 2, c = Math.cos(t), s = Math.sin(t); let x = Rx * c, y = Ry * s;
+    if (v.ringShape === 'square') { x = Rx * Math.sign(c) * Math.pow(Math.abs(c), 0.5); y = Ry * Math.sign(s) * Math.pow(Math.abs(s), 0.5); }
+    if (v.ringShape === 'd' && s < 0) { x = Rx * Math.sign(c) * Math.pow(Math.abs(c), 0.45); y = Ry * 0.55 * Math.sign(s) * Math.pow(Math.abs(s), 0.45); }
+    if (v.ringShape === 'drop') x *= 0.45 + 0.55 * Math.pow((1 + s) / 2, 0.8);
+    c2.push([x, y]); }
+  const bottom = Math.min(...c2.map(p => p[1])), cy = baseY - bottom, side = v.ringSit === 'side';
+  const frames = c2.map((p, m) => { const q = c2[(m + 1) % M], r = c2[(m - 1 + M) % M], tx = q[0] - r[0], ty = q[1] - r[1], l = Math.hypot(tx, ty) || 1; let nx = ty / l, ny = -tx / l; if (nx * p[0] + ny * p[1] < 0) { nx = -nx; ny = -ny; }
+    return side ? { p: new THREE.Vector3(ax, cy + p[1], p[0]), n: new THREE.Vector3(0, ny, nx), b: new THREE.Vector3(1, 0, 0) } : { p: new THREE.Vector3(ax + p[0], cy + p[1], 0), n: new THREE.Vector3(nx, ny, 0), b: new THREE.Vector3(0, 0, 1) }; });
+  const top = Math.max(...c2.map(p => p[1])) + cy;
+  return { g: sweep(frames, true, section(v.ringProf, tr, ta)), top: top + tr / 2, innerTop: top - tr / 2, tr, ta, cy, Rx, Ry, bottomY: bottom + cy, ax };
+}
+function archPath(v, base, an) {
+  const { tr, ta } = wireDims(v), xL = an[0] - v.archW / 2, xR = an[0] + v.archW / 2;
+  const foot = x => { let best = null; for (const p of base) if (Math.abs(p[0] - x) < 0.35 && (!best || p[1] > best[1])) best = p; return best ? best[1] : nearest(base, [x, an[1]])[1]; };
+  const yL = foot(xL) - 0.45, yR = foot(xR) - 0.45, top = Math.max(yL, yR) + v.archH, M = 70, pts = [];
+  for (let m = 0; m <= M; m++) { const s = m / M, x = xL + (xR - xL) * s, yb = yL + (yR - yL) * s, lift = Math.sin(Math.PI * s); pts.push([x, yb + (top - yb) * Math.pow(lift, 0.75)]); }
+  const frames = pts.map((p, m) => { const q = pts[Math.min(M, m + 1)], r = pts[Math.max(0, m - 1)], tx = q[0] - r[0], ty = q[1] - r[1], l = Math.hypot(tx, ty) || 1;
+    return { p: new THREE.Vector3(p[0], p[1], 0), n: new THREE.Vector3(-ty / l, tx / l, 0), b: new THREE.Vector3(0, 0, 1) }; });
+  return { g: sweep(frames, false, section(v.ringProf, tr, ta)), top: top + tr / 2, innerTop: top - tr / 2, apex: [an[0], top], feet: [[xL, yL], [xR, yR]], pts, tr };
+}
+function signetBand(v, faceLen) {
+  const R = (11.63 + 0.8128 * v.sigSize) / 2, M = 180, Q = 24, wTop = Math.max(v.bandW, Math.min(faceLen * 0.82, 14)), tTop = v.bandT + 1.7, pos = new Float32Array(M * Q * 3), idx = [];
+  for (let m = 0; m < M; m++) { const th = m / M * Math.PI * 2, s = (1 + Math.sin(th)) / 2, b = Math.pow(s, 1.6 / v.shoulder), w = v.bandW + (wTop - v.bandW) * b, t = v.bandT + (tTop - v.bandT) * b;
+    for (let q = 0; q < Q; q++) { const f = q / Q * Math.PI * 2, c = Math.cos(f), sn = Math.sin(f), ex = Math.sign(c) * Math.pow(Math.abs(c), 0.45), ez = Math.sign(sn) * Math.pow(Math.abs(sn), 0.45), r = R + t / 2 + ex * t / 2, o = (m * Q + q) * 3;
+      pos[o] = r * Math.cos(th); pos[o + 1] = r * Math.sin(th); pos[o + 2] = ez * w / 2; } }
+  for (let m = 0; m < M; m++) for (let q = 0; q < Q; q++) { const a = m * Q + q, b = ((m + 1) % M) * Q + q, c = ((m + 1) % M) * Q + (q + 1) % Q, d = m * Q + (q + 1) % Q; idx.push(a, b, c, a, c, d); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setIndex(idx); fixWinding(g); g.computeVertexNormals();
+  return { g, R, top: R + tTop };
+}
+function signedVol(g) { const p = g.attributes.position.array, ix = g.index.array; let v = 0;
+  for (let i = 0; i < ix.length; i += 3) { const a = ix[i] * 3, b = ix[i + 1] * 3, c = ix[i + 2] * 3;
+    v += (p[a] * (p[b + 1] * p[c + 2] - p[b + 2] * p[c + 1]) - p[a + 1] * (p[b] * p[c + 2] - p[b + 2] * p[c]) + p[a + 2] * (p[b] * p[c + 1] - p[b + 1] * p[c])) / 6; } return v; }
+function fixWinding(g) { if (signedVol(g) < 0) { const ix = g.index.array; for (let i = 0; i < ix.length; i += 3) { const t = ix[i + 1]; ix[i + 1] = ix[i + 2]; ix[i + 2] = t; } if (g.index.needsUpdate !== undefined) g.index.needsUpdate = true; } }
+function beadSpots(v, base, an) {
+  if (v.beadMode === 'off') return [];
+  const nr = normals(base), out = [], far = p => Math.hypot(p[0] - an[0], p[1] - an[1]) > Math.max(1.4, v.bead);
+  const add = i => { const p = base[i]; if (!(ringOn(v) || v.archOn) || far(p)) out.push([p[0] + nr[i][0] * v.bead * 0.3, p[1] + nr[i][1] * v.bead * 0.3]); };
+  const idxOf = q => { let b = 0, bd = 1e18; base.forEach((p, i) => { const d = (p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2; if (d < bd) { bd = d; b = i; } }); return b; };
+  if (v.beadMode === 'sharp') fullPts().forEach(p => { if (p.c) add(idxOf(rot([p.x, p.y], v.tilt))); });
+  else if (v.beadMode === 'sides') { let l = 0, r = 0, bo = 0; base.forEach((p, i) => { if (p[0] < base[l][0]) l = i; if (p[0] > base[r][0]) r = i; if (p[1] < base[bo][1]) bo = i; }); [l, r, bo].forEach(add); }
+  else { const n = base.length, k = Math.max(3, v.beadCount | 0); for (let j = 0; j < k; j++) add(Math.floor(j * n / k)); }
+  return out;
+}
+
+// =================== 3D scene ===================
+const stage = $('stage');
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1)); renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+renderer.setClearColor(0x000000, 0); stage.prepend(renderer.domElement);
+const scene = new THREE.Scene(), pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.02).texture;
+const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 600), controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.minDistance = 8; controls.maxDistance = 200;
+const key = new THREE.DirectionalLight(0xfff0d8, 1.1); key.position.set(-20, 30, 40); scene.add(key);
+const fill = new THREE.DirectionalLight(0xdfe8ff, 0.35); fill.position.set(30, -10, 20); scene.add(fill);
+const group = new THREE.Group(); scene.add(group);
+const METAL = { y14: [0xE2B96C, 13.1, '14K'], y18: [0xEBC263, 15.6, '18K'], r14: [0xE2A487, 13.1, '14K ROSE'], w14: [0xE6E2D8, 13.0, '14K WHITE'], s925: [0xE2E2DE, 10.36, '925'] };
+const FINISH = { polish: [0.07, 0.6], soft: [0.18, 0.3], satin: [0.34, 0.1], matte: [0.55, 0] };
+const mat = new THREE.MeshPhysicalMaterial({ color: 0xE2B96C, metalness: 1, roughness: 0.18, clearcoat: 0.3, clearcoatRoughness: 0.2 });
+const chainMat = new THREE.MeshStandardMaterial({ color: 0xC9A55C, metalness: 1, roughness: 0.3 });
+let parts = [], info = {}, lastBox = null;
+
+function rebuild(coarse) {
+  const v = readAll(), [col, dens, lab] = METAL[v.metal], [rough, cc] = FINISH[v.finish];
+  mat.color.setHex(col); mat.roughness = rough; mat.clearcoat = cc; chainMat.color.setHex(col);
+  const O = outlines(v), bb = bbox(O.base), an = O.an;
+  for (const m of group.children.slice()) { group.remove(m); m.geometry.dispose(); }
+  parts = []; info.ring = null; info.arch = null; info.beads = [];
+  const add = (g, exp = true, m = mat) => { const mesh = new THREE.Mesh(g, m); group.add(mesh); if (exp) parts.push(mesh); return mesh; };
+  const loops = [O.full]; if (v.holeOn) loops.push(holeLoop(v));
+  const bodyR = body(loops, v, coarse, markMask(S.marks, bbox(O.full), v.engStyle === 'stamp')); add(bodyR.g);
+  bodyR.g.computeBoundingBox(); const zr = bodyR.g.boundingBox.clone();
+  let total = NaN, label2 = 'WITH RING';
+  if (S.mode === 'pendant') {
+    const hangX = an[0]; let hangY;
+    if (v.archOn) { const a = archPath(v, O.base, an); add(a.g); for (const f of a.feet) { const s = new THREE.SphereGeometry(a.tr * 0.75, 18, 12); s.translate(f[0], f[1], 0); add(s); } info.arch = a; hangY = a.top - a.tr * 0.4; total = a.top - bb.y0; }
+    else { let nt = -1e9; for (const p of O.full) if (Math.abs(p[0] - an[0]) < Math.max(0.6, v.neckW * 0.5)) nt = Math.max(nt, p[1]); hangY = nt > -1e8 ? nt : an[1]; }
+    if (ringOn(v)) {
+      const { tr } = wireDims(v), baseY = v.archOn ? hangY : (v.attach === 'fused' ? hangY - tr * 0.35 : hangY - tr / 2 - 0.5);
+      const r = ringPath(v, hangX, baseY); add(r.g);
+      if (v.attach === 'fused' || v.archOn) { const s = new THREE.SphereGeometry(1, 24, 16); s.scale(Math.max(r.ta, v.wire) * 0.62, r.tr * 1.1, Math.max(r.tr, v.wire) * 0.75); s.translate(hangX, baseY + r.tr * 0.2, 0); add(s); }
+      total = r.top - bb.y0; info.ring = r;
+      const cy = r.innerTop - 0.32, ch = v.ringSit === 'side'
+        ? new THREE.CatmullRomCurve3([[-40, 15], [-12, 2.6], [0, 0], [12, 2.6], [40, 15]].map(([x, y]) => new THREE.Vector3(hangX + x, cy + y, 0)))
+        : new THREE.CatmullRomCurve3([[12, -30], [2, -8], [0, 0], [2, 8], [12, 30]].map(([y, z]) => new THREE.Vector3(hangX, cy + y, z)));
+      add(new THREE.TubeGeometry(ch, 160, 0.3, 8, false), false, chainMat);
+    } else if (v.archOn && info.arch) { const a = info.arch, cy = a.innerTop - 0.32;
+      add(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([[12, -30], [2, -8], [0, 0], [2, 8], [12, 30]].map(([y, z]) => new THREE.Vector3(a.apex[0], cy + y, z))), 160, 0.3, 8, false), false, chainMat); }
+    info.beads = beadSpots(v, O.base, an); for (const [x, y] of info.beads) { const s = new THREE.SphereGeometry(v.bead / 2, 28, 20); s.translate(x, y, 0); add(s); }
+  } else {
+    bodyR.g.rotateX(-Math.PI / 2); const bandR = signetBand(v, bb.h); add(bandR.g);
+    bodyR.g.computeBoundingBox(); const y0 = bodyR.g.boundingBox.min.y; bodyR.g.translate(0, bandR.top - 0.6 - y0 - 0.2, 0);
+    info.ringD = bandR.R * 2; label2 = 'RING SIZE';
+  }
+  let vol = 0; for (const m of parts) vol += Math.abs(signedVol(m.geometry));
+  Object.assign(info, { h: bb.h, w: bb.w, vol, g: vol / 1000 * dens, thick: zr.max.z - zr.min.z, total, an });
+  $('r1L').textContent = S.mode === 'signet' ? 'FACE H × W' : 'SHAPE H × W';
+  $('r1').textContent = bb.h.toFixed(1) + ' × ' + bb.w.toFixed(1) + ' mm';
+  $('r2L').textContent = label2;
+  $('r2').textContent = S.mode === 'signet' ? 'US ' + v.sigSize + ' · ' + info.ringD.toFixed(1) + ' mm' : (isFinite(total) ? total.toFixed(1) + ' mm long' : '–');
+  $('r3').textContent = info.thick.toFixed(2) + ' mm';
+  $('r4L').textContent = 'WEIGHT · ' + lab; $('r4').textContent = '≈ ' + info.g.toFixed(2) + ' g';
+  $('shapeTitle').textContent = S.name + (S.mode === 'signet' ? ' signet' : '');
+  const box = new THREE.Box3(); for (const m of parts) box.expandByObject(m); lastBox = box;
+  drawGrid(O, bb, v);
+}
+
+function setView(kind) {
+  const box = lastBox || new THREE.Box3(new THREE.Vector3(-8, -8, -2), new THREE.Vector3(8, 10, 2)), c = box.getCenter(new THREE.Vector3()), sz = box.getSize(new THREE.Vector3());
+  const d = Math.max(sz.x, sz.y, sz.z) * 2.4 + 6; controls.target.copy(c);
+  if (kind === 'front') camera.position.set(c.x, c.y, c.z + d); else if (kind === 'side') camera.position.set(c.x + d, c.y, c.z); else camera.position.set(c.x - d * 0.55, c.y + d * 0.45, c.z + d * 0.7);
+  controls.update();
+}
+function resize() { const r = stage.getBoundingClientRect(); renderer.setSize(r.width, r.height, false); camera.aspect = r.width / Math.max(1, r.height); camera.updateProjectionMatrix(); }
+new ResizeObserver(resize).observe(stage);
+document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+function tick() { controls.update(); renderer.render(scene, camera); requestAnimationFrame(tick); }
+
+// =================== grid editor ===================
+const svg = $('grid'), NS = 'http://www.w3.org/2000/svg';
+function el(t, a) { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); return e; }
+let VB = { x: -12, y: -12, w: 24, h: 24 };
+function drawGrid(O, bb, v) {
+  const fb = bbox(O.full), top = Math.max(fb.y1, info.ring ? info.ring.top : -1e9, info.arch ? info.arch.top : -1e9);
+  const span = Math.max(fb.w, top - fb.y0, 10) + 7, cx = (fb.x0 + fb.x1) / 2, cy = (fb.y0 + top) / 2;
+  VB = { x: cx - span / 2, y: -cy - span / 2, w: span, h: span }; svg.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
+  const cs = getComputedStyle(document.documentElement), col = k => cs.getPropertyValue(k).trim(); svg.replaceChildren();
+  const g = el('g', {});
+  for (let i = Math.floor(VB.x); i <= VB.x + VB.w; i++) g.append(el('line', { x1: i, y1: VB.y, x2: i, y2: VB.y + VB.h, stroke: col(i % 5 ? '--grid' : '--grid5'), 'stroke-width': i === 0 ? 0.09 : 0.04 }));
+  for (let j = Math.floor(VB.y); j <= VB.y + VB.h; j++) g.append(el('line', { x1: VB.x, y1: j, x2: VB.x + VB.w, y2: j, stroke: col(j % 5 ? '--grid' : '--grid5'), 'stroke-width': j === 0 ? 0.09 : 0.04 }));
+  svg.append(g);
+  const d = a => 'M' + a.map(p => p[0].toFixed(3) + ' ' + (-p[1]).toFixed(3)).join('L') + 'Z', gold = col('--gold'), ink = col('--ink'), red = col('--red');
+  if (info.arch) svg.append(el('path', { d: 'M' + info.arch.pts.map(p => p[0].toFixed(2) + ' ' + (-p[1]).toFixed(2)).join('L'), fill: 'none', stroke: gold, 'stroke-width': info.arch.tr, 'stroke-linecap': 'round', opacity: 0.8 }));
+  if (info.ring && S.mode === 'pendant') { const r = info.ring;
+    if (v.ringSit === 'side') svg.append(el('rect', { x: r.ax - r.ta / 2, y: -r.top, width: r.ta, height: r.top - (r.bottomY - r.tr / 2), rx: Math.min(r.ta, r.tr) / 2, fill: gold, 'fill-opacity': 0.55, stroke: ink, 'stroke-width': 0.06 }));
+    else svg.append(el('ellipse', { cx: r.ax, cy: -r.cy, rx: r.Rx, ry: r.Ry, fill: 'none', stroke: gold, 'stroke-width': r.tr, 'stroke-opacity': 0.75 })); }
+  let shape = d(O.full); if (v.holeOn) shape += d(holeLoop(v));
+  svg.append(el('path', { d: shape, fill: gold, 'fill-opacity': 0.32, 'fill-rule': 'evenodd', stroke: ink, 'stroke-width': 0.1, 'stroke-linejoin': 'round' }));
+  svg.append(el('path', { d: d(O.full), fill: 'none', stroke: 'transparent', 'stroke-width': 1.1, 'data-edge': 1, style: 'cursor:copy' }));
+  for (const [x, y] of info.beads || []) svg.append(el('circle', { cx: x, cy: -y, r: v.bead / 2, fill: gold, stroke: ink, 'stroke-width': 0.05 }));
+  S.marks.forEach((m, i) => { const tf = `translate(${m.x} ${-m.y}) rotate(${-m.rot})`;
+    if (m.type === 'text') { const t = el('text', { transform: tf, 'font-size': m.size, 'font-family': FONTS[m.font], 'text-anchor': 'middle', 'dominant-baseline': 'middle', fill: ink, 'fill-opacity': 0.75 }); t.textContent = m.text; svg.append(t); }
+    else { const k = m.size / 24; svg.append(el('path', { d: SYMS[m.sym][1], transform: tf + ` scale(${k}) translate(-12 -12)`, fill: 'none', stroke: ink, 'stroke-opacity': 0.75, 'stroke-width': m.weight / k, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' })); }
+    svg.append(el('path', { d: `M${m.x - 0.5} ${-m.y}H${m.x + 0.5}M${m.x} ${-m.y - 0.5}V${-m.y + 0.5}`, stroke: i === S.msel ? red : col('--blue'), 'stroke-width': 0.12 }));
+    svg.append(el('circle', { cx: m.x, cy: -m.y, r: 0.9, fill: 'transparent', 'data-m': i, style: 'cursor:move' })); });
+  const tx = (x, y, s, c, anc) => { const t = el('text', { x, y, 'font-size': 0.78, fill: c, 'text-anchor': anc || 'start', 'font-family': 'Jost, sans-serif' }); t.textContent = s; svg.append(t); };
+  const bx = bb.x1 + 1.2;
+  svg.append(el('path', { d: `M${bx - 0.3} ${-bb.y1}H${bx + 0.3}M${bx} ${-bb.y1}V${-bb.y0}M${bx - 0.3} ${-bb.y0}H${bx + 0.3}`, stroke: red, 'stroke-width': 0.08, fill: 'none' }));
+  tx(bx + 0.45, -(bb.y0 + bb.y1) / 2, bb.h.toFixed(1) + ' mm', red);
+  const by = -bb.y0 + 1.2;
+  svg.append(el('path', { d: `M${bb.x0} ${by - 0.3}V${by + 0.3}M${bb.x0} ${by}H${bb.x1}M${bb.x1} ${by - 0.3}V${by + 0.3}`, stroke: red, 'stroke-width': 0.08, fill: 'none' }));
+  tx((bb.x0 + bb.x1) / 2, by + 1.05, bb.w.toFixed(1) + ' mm', red, 'middle');
+  if (S.mode === 'pendant' && (ringOn(v) || v.archOn)) svg.append(el('circle', { cx: info.an[0], cy: -info.an[1], r: 0.32, fill: 'none', stroke: red, 'stroke-width': 0.1, 'stroke-dasharray': '0.2 0.15' }));
+  fullPts().forEach((p, i) => { const ed = !S.sym || i < S.pts.length, q = rot([p.x, p.y], v.tilt);
+    svg.append(el('circle', { cx: q[0], cy: -q[1], r: ed ? 0.4 : 0.24, fill: i === S.sel ? red : col(p.c ? '--ink' : '--paper'), stroke: ink, 'stroke-width': 0.08, opacity: ed ? 1 : 0.45 }));
+    if (ed) svg.append(el('circle', { cx: q[0], cy: -q[1], r: 0.95, fill: 'transparent', 'data-i': i, style: 'cursor:grab' })); });
+}
+function svgPt(e) { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; const q = pt.matrixTransform(svg.getScreenCTM().inverse()); return { x: q.x, y: -q.y }; }
+const snap5 = v => Math.round(v * 20) / 20;
+let drag = -1, mdrag = -1, moved = false;
+svg.addEventListener('pointerdown', e => {
+  const tilt = num('tilt'), qw = svgPt(e);
+  if (S.placing && S.mode === 'pendant') { S.ringAt = [qw.x, qw.y]; setPlacing(false); rebuild(false); commit(); return; }
+  const mi = +(e.target.getAttribute('data-m') ?? -1);
+  if (mi >= 0) { mdrag = mi; S.msel = mi; syncMarks(); svg.setPointerCapture(e.pointerId); e.preventDefault(); return; }
+  let i = +(e.target.getAttribute('data-i') ?? -1);
+  if (i < 0 && e.target.getAttribute('data-edge')) {
+    const r = rot([qw.x, qw.y], -tilt), q = { x: S.sym ? Math.abs(r[0]) : r[0], y: r[1] }, pts = S.pts, n = pts.length;
+    let best = 1e9, at = 0; const segs = S.sym ? n - 1 : n;
+    for (let k = 0; k < segs; k++) { const a = pts[k], b = pts[(k + 1) % n], ex = b.x - a.x, ey = b.y - a.y, t = Math.max(0, Math.min(1, ((q.x - a.x) * ex + (q.y - a.y) * ey) / (ex * ex + ey * ey || 1))), dd = Math.hypot(a.x + t * ex - q.x, a.y + t * ey - q.y); if (dd < best) { best = dd; at = k + 1; } }
+    pts.splice(at, 0, { x: snap5(q.x), y: snap5(q.y), c: false }); i = at; moved = true;
+  }
+  if (i < 0) return; drag = i; S.sel = i; svg.setPointerCapture(e.pointerId); syncSel(true); soon(); e.preventDefault();
+});
+svg.addEventListener('pointermove', e => {
+  const qw = svgPt(e);
+  if (mdrag >= 0) { const m = S.marks[mdrag]; m.x = snap5(qw.x); m.y = snap5(qw.y); moved = true; loadMarkUI(); soon(); return; }
+  if (drag < 0) return; const r = rot([qw.x, qw.y], -num('tilt')), p = S.pts[drag]; moved = true;
+  p.y = snap5(r[1]); p.x = S.sym && (drag === 0 || drag === S.pts.length - 1) ? 0 : snap5(S.sym ? Math.max(0, r[0]) : r[0]); syncSel(true); soon(); });
+svg.addEventListener('pointerup', () => { if (drag < 0 && mdrag < 0) return; drag = -1; mdrag = -1; rebuild(false); syncSizes(); if (moved) commit(); moved = false; });
+let raf = 0, idle = 0; function soon() { if (!raf) raf = requestAnimationFrame(() => { raf = 0; rebuild(true); }); clearTimeout(idle); idle = setTimeout(() => rebuild(false), 260); }
+function syncSel(quiet) {
+  const p = S.pts[S.sel]; $('sharpPt').disabled = !p; $('sharpPt').setAttribute('aria-pressed', String(!!(p && p.c)));
+  $('selNote').textContent = p ? `Dot ${S.sel + 1}: ${p.x.toFixed(2)}, ${p.y.toFixed(2)} mm${p.c ? ', sharp' : ''}` : 'Tap a dot to pick it.';
+  $('delPt').disabled = !p || S.pts.length <= (S.sym ? 3 : 4) || (S.sym && (S.sel === 0 || S.sel === S.pts.length - 1));
+  if (!quiet) rebuild(false);
+}
+$('delPt').onclick = () => { S.pts.splice(S.sel, 1); S.sel = -1; syncSel(); syncSizes(); commit(); };
+$('sharpPt').onclick = () => { const p = S.pts[S.sel]; if (!p) return; p.c = !p.c; syncSel(); commit(); };
+function setSym(on) {
+  if (on === S.sym) return;
+  if (!on) S.pts = fullPts().map(p => ({ ...p }));
+  else { const a = S.pts; let t = 0, b = 0; a.forEach((p, i) => { if (p.y > a[t].y) t = i; if (p.y < a[b].y) b = i; });
+    const walk = dir => { const o = []; for (let i = t; ; i = (i + dir + a.length) % a.length) { o.push({ ...a[i] }); if (i === b || o.length > a.length) break; } return o; };
+    let r = walk(1); if (r.reduce((s, p) => s + p.x, 0) < 0) r = walk(-1).map(p => ({ ...p, x: -p.x }));
+    const mid = (a[t].x + a[b].x) / 2; r = r.map(p => ({ ...p, x: Math.max(0, p.x - mid) })); r[0].x = 0; r[r.length - 1].x = 0; S.pts = r; }
+  S.sym = on; S.sel = -1; syncUI(); syncSel(); commit();
+}
+$('symM').onclick = () => setSym(true); $('symF').onclick = () => setSym(false);
+function setPlacing(on) { S.placing = on; $('placeRing').setAttribute('aria-pressed', String(on)); $('modeTag').hidden = !on; }
+$('placeRing').onclick = () => setPlacing(!S.placing);
+$('autoRing').onclick = () => { S.ringAt = null; setPlacing(false); rebuild(false); commit(); };
+$('smoothMore').onclick = () => { writeAll({ soften: Math.min(1.5, num('soften') + 0.2) }); rebuild(false); syncSizes(); commit(); };
+$('organic').onclick = () => { S.seed = Math.round(Math.random() * 100); writeAll({ wobble: Math.max(0.22, num('wobble')) }); rebuild(false); syncSizes(); commit(); };
+
+// =================== engraving controls ===================
+function loadMarkUI() { const m = S.marks[S.msel], on = !!m;
+  for (const k of ['mSize', 'mX', 'mY', 'mRot', 'mWeight']) { $(k).disabled = !on; $(k + 'N').disabled = !on; }
+  for (const k of ['markText', 'markFont', 'markSym']) $(k).disabled = !on;
+  $('delMark').disabled = !on; $('rowText').hidden = on && m.type !== 'text'; $('rowFont').hidden = on && m.type !== 'text'; $('rowSym').hidden = !on || m.type !== 'sym';
+  $('mWeight').closest('.row').hidden = !on || m.type !== 'sym';
+  if (!on) return; writeAll({ mSize: m.size, mX: m.x, mY: m.y, mRot: m.rot, mWeight: m.weight || 0.4 });
+  if (m.type === 'text') { if (document.activeElement !== $('markText')) $('markText').value = m.text; $('markFont').value = m.font; } else $('markSym').value = m.sym; }
+function syncMarks() { const s = $('markPick'); s.replaceChildren();
+  if (!S.marks.length) { const o = document.createElement('option'); o.value = -1; o.textContent = 'No marks yet'; s.append(o); }
+  S.marks.forEach((m, i) => { const o = document.createElement('option'); o.value = i; o.textContent = `${i + 1}. ${m.type === 'text' ? '“' + m.text + '”' : SYMS[m.sym][0]}`; s.append(o); });
+  if (S.msel >= S.marks.length) S.msel = S.marks.length - 1; s.value = S.msel; loadMarkUI(); }
+function centre() { const bb = bbox(outlines(readAll()).base); return [+((bb.x0 + bb.x1) / 2).toFixed(2), +((bb.y0 + bb.y1) / 2).toFixed(2)]; }
+$('addText').onclick = () => { const [x, y] = centre(); S.marks.push({ type: 'text', text: 'C', font: 'press', size: 5, x, y, rot: 0 }); S.msel = S.marks.length - 1; syncMarks(); rebuild(false); commit(); };
+$('addSym').onclick = () => { const [x, y] = centre(); S.marks.push({ type: 'sym', sym: 'star', size: 5, x, y, rot: 0, weight: 0.4 }); S.msel = S.marks.length - 1; syncMarks(); rebuild(false); commit(); };
+$('delMark').onclick = () => { S.marks.splice(S.msel, 1); S.msel = S.marks.length - 1; syncMarks(); rebuild(false); commit(); };
+$('markPick').onchange = () => { S.msel = +$('markPick').value; syncMarks(); rebuild(false); };
+$('markText').oninput = () => { const m = S.marks[S.msel]; if (!m) return; m.text = $('markText').value; const o = $('markPick').options[S.msel]; if (o) o.textContent = `${S.msel + 1}. “${m.text}”`; soon(); };
+$('markText').onchange = () => commit();
+$('markFont').onchange = () => { const m = S.marks[S.msel]; if (!m) return; m.font = $('markFont').value; rebuild(false); commit(); };
+$('markSym').onchange = () => { const m = S.marks[S.msel]; if (!m) return; m.sym = $('markSym').value; syncMarks(); rebuild(false); commit(); };
+const MK = { mSize: 'size', mX: 'x', mY: 'y', mRot: 'rot', mWeight: 'weight' };
+for (const k in MSPEC) { const r = $(k), n = $(k + 'N');
+  const set = x => { const m = S.marks[S.msel]; if (m) m[MK[k]] = x; };
+  r.addEventListener('input', () => { n.value = r.value; set(num(k)); soon(); });
+  r.addEventListener('change', () => { rebuild(false); commit(); });
+  n.addEventListener('change', () => { const [, min, max] = MSPEC[k]; let x = parseFloat(n.value); if (!isFinite(x)) { n.value = r.value; return; } x = Math.min(max, Math.max(min, x)); n.value = x; r.value = x; set(x); rebuild(false); commit(); }); }
+
+// =================== wiring ===================
+function scalePts(kx, ky) { for (const p of S.pts) { p.x = +(p.x * kx).toFixed(3); p.y = +(p.y * ky).toFixed(3); } }
+function untilted() { const v = readAll(); v.tilt = 0; return bbox(gauss(baseLine(v), Math.max(0.04, v.soften))); }
+function syncSizes() { const bb = untilted(); for (const [k, val] of [['height', bb.h], ['width', bb.w]]) { $(k).value = val.toFixed(1); $(k + 'N').value = val.toFixed(1); } }
+function setDim(k, t) { const bb = untilted(), cur = k === 'height' ? bb.h : bb.w; if (!(t > 0) || !(cur > 0)) return; k === 'height' ? scalePts(1, t / cur) : scalePts(t / cur, 1); }
+for (const k in SPEC) {
+  const r = $(k), n = $(k + 'N');
+  r.addEventListener('input', () => { n.value = r.value; if (k === 'height' || k === 'width') setDim(k, num(k)); if (k === 'ringID') $('chain').value = 'custom'; soon(); });
+  r.addEventListener('change', () => { if (k === 'height' || k === 'width') syncSizes(); rebuild(false); commit(); });
+  n.addEventListener('change', () => { const [, min, max] = SPEC[k]; let x = parseFloat(n.value); if (!isFinite(x)) { n.value = r.value; return; } x = Math.min(max, Math.max(min, x)); n.value = x; r.value = x;
+    if (k === 'height' || k === 'width') { setDim(k, x); syncSizes(); } if (k === 'ringID') $('chain').value = 'custom'; rebuild(false); commit(); });
+}
+for (const k of SELECTS) $(k).addEventListener('change', () => { if (k === 'chain' && CHAIN[$('chain').value]) writeAll({ ringID: CHAIN[$('chain').value] }); if (k === 'ringShape' && $('ringShape').value === 'long') writeAll({ ringRatio: 1.6 }); rebuild(false); commit(); });
+for (const k of CHECKS) $(k).addEventListener('change', () => { rebuild(false); commit(); });
+document.querySelectorAll('[data-style]').forEach(b => b.addEventListener('click', () => { writeAll(STYLES[b.dataset.style]); rebuild(false); commit(); }));
+function loadShape(k) { const s = SHAPE[k]; S.key = k; S.name = s.name; S.sel = -1; S.sym = !FREE.has(k); S.pts = s.pts.map(p => ({ ...p })); S.ringAt = null;
+  if (!$('keepDepth').checked) writeAll(STYLES[s.style]); writeAll({ ...SHAPE_RESET, ...s.extra });
+  if (S.mode === 'signet') { const bb = untilted(); if (bb.h > 13) scalePts(12 / bb.h, 12 / bb.h); }
+  syncUI(); rebuild(false); setView(S.mode === 'signet' ? 'angle' : 'front'); }
+const sel = $('preset');
+for (const [grp, list] of SHAPES) { const og = document.createElement('optgroup'); og.label = grp; for (const [k, name] of list) { const o = document.createElement('option'); o.value = k; o.textContent = name; og.append(o); } sel.append(og); }
+sel.addEventListener('change', () => { loadShape(sel.value); commit(); });
+function setMode(m) { if (S.mode === m) return; S.mode = m; setPlacing(false); const bb = untilted(); if (m === 'signet' && bb.h > 13) scalePts(12 / bb.h, 12 / bb.h); syncUI(); rebuild(false); setView(m === 'signet' ? 'angle' : 'front'); commit(); }
+$('modeP').onclick = () => setMode('pendant'); $('modeS').onclick = () => setMode('signet');
+function syncUI() {
+  sel.value = S.key; syncSizes();
+  $('symM').setAttribute('aria-pressed', String(S.sym)); $('symF').setAttribute('aria-pressed', String(!S.sym));
+  $('modeP').setAttribute('aria-pressed', String(S.mode === 'pendant')); $('modeS').setAttribute('aria-pressed', String(S.mode === 'signet'));
+  document.querySelectorAll('fieldset[data-mode]').forEach(f => f.hidden = f.dataset.mode !== S.mode);
+  for (const k in SPEC) $(k + 'N').value = +(+$(k).value).toFixed(3);
+  syncSel(true);
+}
+
+// =================== export ===================
+function msg(t) { $('msg').textContent = t; }
+function stlBytes() {
+  let tris = 0; for (const m of parts) tris += m.geometry.index.count / 3;
+  const buf = new ArrayBuffer(84 + tris * 50), dv = new DataView(buf), head = 'Bare Stories Pendant Lab v3, units mm';
+  for (let i = 0; i < head.length; i++) dv.setUint8(i, head.charCodeAt(i)); dv.setUint32(80, tris, true); let o = 84;
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3(), n = new THREE.Vector3(), t = new THREE.Vector3();
+  for (const m of parts) { const p = m.geometry.attributes.position, ix = m.geometry.index.array;
+    for (let i = 0; i < ix.length; i += 3) { a.fromBufferAttribute(p, ix[i]); b.fromBufferAttribute(p, ix[i + 1]); c.fromBufferAttribute(p, ix[i + 2]);
+      n.subVectors(b, a).cross(t.subVectors(c, a)).normalize();
+      for (const v of [n, a, b, c]) { dv.setFloat32(o, v.x, true); dv.setFloat32(o + 4, v.y, true); dv.setFloat32(o + 8, v.z, true); o += 12; } o += 2; } }
+  return new Uint8Array(buf);
+}
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(u) { let c = 0xFFFFFFFF; for (let i = 0; i < u.length; i++) c = CRC[(c ^ u[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function zip(files) {
+  const enc = new TextEncoder(), out = [], cen = []; let off = 0;
+  for (const f of files) { const nm = enc.encode(f.name), crc = crc32(f.data), sz = f.data.length, lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(12, 0x5B21, true); lh.setUint32(14, crc, true); lh.setUint32(18, sz, true); lh.setUint32(22, sz, true); lh.setUint16(26, nm.length, true);
+    out.push(new Uint8Array(lh.buffer), nm, f.data);
+    const ch = new DataView(new ArrayBuffer(46)); ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(14, 0x5B21, true); ch.setUint32(16, crc, true); ch.setUint32(20, sz, true); ch.setUint32(24, sz, true); ch.setUint16(28, nm.length, true); ch.setUint32(42, off, true);
+    cen.push(new Uint8Array(ch.buffer), nm); off += 30 + nm.length + sz; }
+  const cs = cen.reduce((s, x) => s + x.length, 0), end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0, 0x06054b50, true); end.setUint16(8, files.length, true); end.setUint16(10, files.length, true); end.setUint32(12, cs, true); end.setUint32(16, off, true);
+  return new Blob([...out, ...cen, new Uint8Array(end.buffer)], { type: 'application/zip' });
+}
+function shapeCode() { return JSON.stringify({ lab: 'Pendant Lab v3', shape: S.name, mode: S.mode, mirror: S.sym, dots: S.pts.map(p => [+p.x.toFixed(2), +p.y.toFixed(2), p.c ? 1 : 0]), ringAt: S.ringAt, marks: S.marks, settings: readAll(), size_mm: [+info.h.toFixed(2), +info.w.toFixed(2)], weight_g: +info.g.toFixed(2) }); }
+$('exportBtn').onclick = async () => {
+  rebuild(false); const base = `${S.name}${S.mode === 'signet' ? ' signet' : ''} ${info.h.toFixed(1)}mm`;
+  const z = zip([{ name: base + '.stl', data: stlBytes() }, { name: base + ' settings.json', data: new TextEncoder().encode(shapeCode()) }]);
+  try { const dl = await (window.claude?.use?.('downloads') ?? null); if (!dl) { const u = URL.createObjectURL(new Blob([z], { type: 'application/zip' })), ln = document.createElement('a'); ln.href = u; ln.download = base + '.zip'; document.body.append(ln); ln.click(); ln.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); msg('Saved to your downloads. The STL inside is in millimetres.'); return; }
+    await dl.save({ filename: base + '.zip', data: z }); msg('Saved. The STL inside the zip is in millimetres.');
+  } catch (e) { msg(e && e.code === 'declined' ? 'Export cancelled.' : 'Export did not go through: ' + ((e && (e.message || e.code)) || 'unknown')); }
+};
+$('copyBtn').onclick = async () => { const t = shapeCode(); try { await navigator.clipboard.writeText(t); msg('Shape code copied. Paste it to Claude to keep this exact shape.'); } catch { msg('Copy was blocked here. Export STL instead, the settings file is inside the zip.'); } };
+
+// =================== start ===================
+writeAll(DEFAULTS); loadShape('pebble'); syncMarks(); commit(); resize(); tick();
+if (document.fonts) document.fonts.ready.then(() => { if (S.marks.length) rebuild(false); });
+</script>
