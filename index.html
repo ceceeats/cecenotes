@@ -6,27 +6,105 @@
 <meta name="robots" content="noindex,nofollow">
 <title>CC Notes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--paper:#F7F2EA;--card:#FFFDF9;--ink:#2E2326;--soft:#7A6A66;--red:#7A3E36;--line:#E6DBCF}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:400 15px/1.5 Jost,system-ui,sans-serif}
-main{max-width:720px;margin:0 auto;padding:28px 16px 48px}
-.k{font:500 11px/1 Jost,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:var(--red)}
-h1{font:600 44px/1 'Cormorant Garamond',serif;margin:8px 0 6px}p.lead{color:var(--soft);margin:0 0 24px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
-a.card,div.card{display:flex;flex-direction:column;gap:6px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:inherit;text-decoration:none}
-a.card:hover{border-color:var(--red)}.card svg{width:28px;height:28px;fill:none;stroke:var(--red);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.card b{font:600 22px/1.1 'Cormorant Garamond',serif}.card span{font-size:13px;color:var(--soft)}.card em{font-style:normal;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
-div.card{opacity:.6}
+:root{--bg:#F4F1EA;--side:#ECE7DD;--card:#FBF9F4;--ink:#24211E;--soft:#6E675E;--faint:#A39B8F;--line:#DDD5C8;--acc:#5B63B7;--rust:#9A4A32;--live:#3F7D5A}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:400 14px/1.5 Inter,system-ui,sans-serif}
+a{color:inherit}
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
+/* sidebar: the vault */
+.side{background:var(--side);border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+.vault{display:flex;align-items:center;gap:8px;font:600 15px Fraunces,serif;margin:0 4px 18px}
+.vault i{width:22px;height:22px;border-radius:6px;background:var(--ink);display:grid;place-items:center;color:var(--bg);font:500 11px 'JetBrains Mono',monospace;font-style:normal}
+.tree h4{font:500 10.5px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:16px 6px 6px}
+.tree a{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;text-decoration:none;color:var(--soft);font-size:13.5px}
+.tree a:hover,.tree a.on{background:rgba(36,33,30,.06);color:var(--ink)}
+.tree a .dot{width:7px;height:7px;border-radius:50%;flex:none}
+.tree a small{margin-left:auto;font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.08em;color:var(--faint)}
+/* main */
+.main{padding:28px 32px 60px;max-width:1080px}
+.crumb{font:500 11px 'JetBrains Mono',monospace;color:var(--faint);letter-spacing:.06em}
+h1{font:600 40px/1.05 Fraunces,serif;margin:6px 0 4px;letter-spacing:-.01em}
+.lead{color:var(--soft);margin:0 0 22px;max-width:56ch}
+.graph{background:var(--card);border:1px solid var(--line);border-radius:14px;position:relative;overflow:hidden}
+.graph svg{display:block;width:100%;height:auto}
+.graph .lbl{font:500 15px Inter,sans-serif;fill:var(--ink)}@media (max-width:760px){.graph .lbl{font-size:22px}}
+.graph .edge{stroke:#C9C0B2;stroke-width:1.2;transition:stroke .15s,stroke-width .15s}
+.graph .edge.hot{stroke:var(--acc);stroke-width:2}
+.graph .node{cursor:pointer}
+.graph .node circle{transition:r .15s}
+.graph .node:hover circle.c{r:13}
+.gcap{position:absolute;left:14px;top:10px;font:500 10.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--faint);text-transform:uppercase}
+.sec{display:flex;align-items:baseline;justify-content:space-between;margin:28px 0 10px}
+.sec h2{font:600 22px Fraunces,serif;margin:0}
+.sec span{font:500 11px 'JetBrains Mono',monospace;color:var(--faint)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}
+a.card:hover{border-color:var(--acc);transform:translateY(-1px)}
+.card .t{display:flex;align-items:center;gap:8px}.card .t b{font:600 18px Fraunces,serif}
+.card .t .dot{width:9px;height:9px;border-radius:50%}
+.card p{margin:0;color:var(--soft);font-size:13px}
+.st{margin-left:auto;font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border-radius:999px;border:1px solid currentColor}
+.st.live{color:var(--live)}.st.draft{color:var(--rust)}.st.soon{color:var(--faint)}
+.links{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.links a,.links span{font:500 11px 'JetBrains Mono',monospace;color:var(--acc);text-decoration:none;background:rgba(91,99,183,.08);padding:2px 7px;border-radius:5px}
+.links a:hover{background:rgba(91,99,183,.16)}
+.card.soon{opacity:.62}
+.foot{margin-top:34px;font:500 11px 'JetBrains Mono',monospace;color:var(--faint)}
+@media (max-width:760px){.app{grid-template-columns:1fr}.side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:14px 16px 8px}
+ .tree{display:flex;flex-wrap:wrap;gap:4px}.tree h4{display:none}.tree a{padding:5px 9px;background:rgba(36,33,30,.04);font-size:12.5px}.tree a small{display:none}.vault{margin-bottom:10px}
+ .main{padding:18px 16px 40px}h1{font-size:32px}.cards{grid-template-columns:1fr}}
 </style>
 </head>
-<body><main>
-<div class="k">CC Notes</div>
-<h1>Notes</h1>
-<p class="lead">Cece's study space, one project per page.</p>
-<div class="grid">
-<a class="card" href="/3d-jewelry/"><svg viewBox="0 0 24 24"><path d="M12 21C8 16.5 6.5 12.5 6.5 9.5a5.5 5.5 0 0 1 11 0c0 3-1.5 7-5.5 11.5z"/><path d="M12 3v3"/></svg><b>3D Jewelry</b><span>Pendant Lab: charms, pendants and signets in 3D, with chains and try-on.</span><em>Live</em></a>
-<div class="card"><svg viewBox="0 0 24 24"><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M8 14V8h8v6M12 8V3M12 3l-2 2M12 3l2 2"/></svg><b>Laser Machines</b><span>Notes on engraving lasers, samples and settings.</span><em>Coming</em></div>
-<div class="card"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="10" rx="1.5"/><rect x="13" y="3" width="8" height="6" rx="1.5"/><rect x="13" y="11" width="8" height="10" rx="1.5"/><rect x="3" y="15" width="8" height="6" rx="1.5"/></svg><b>Moodboard</b><span>Saved pictures and references in one place.</span><em>Coming</em></div>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="vault"><i>cc</i>CC Notes</div>
+  <nav class="tree" id="tree"></nav>
+</aside>
+<main class="main">
+  <div class="crumb">cecenotes.co / projects</div>
+  <h1>Projects</h1>
+  <p class="lead">Everything in one place. Each project links to the notes around it, the way the threads actually connect.</p>
+  <div class="graph"><span class="gcap">Graph</span><svg id="graph" viewBox="0 0 900 330" role="img" aria-label="How the projects link to each other"></svg></div>
+  <div class="sec"><h2>All projects</h2><span id="count"></span></div>
+  <div class="cards" id="cards"></div>
+  <p class="foot">Private notes. Not indexed by search engines.</p>
+</main>
 </div>
-</main></body></html>
+<script>
+// To add a project: add one line here. "links" are the ids it connects to.
+const NOTES = [
+  { id: 'bare-signals', title: 'Bare Signals', url: 'https://baresignals.co', status: 'live', color: '#5B63B7', group: 'Projects', note: 'Peptide and compound library, guides and cases.', links: [] },
+  { id: 'bare-stories', title: 'Bare Stories', url: '/bare-stories/', status: 'draft', color: '#9A4A32', group: 'Projects', note: 'Jewelry brand website. Engraved gold and silver, made in Bali.', links: ['3d-jewelry', 'laser-machine', 'moodboard'] },
+  { id: '3d-jewelry', title: '3D Jewelry', url: '/3d-jewelry/', status: 'draft', color: '#B08A3E', group: 'Projects', note: 'Pendant Lab: charms, pendants and signets in 3D, chains and try-on.', links: ['bare-stories', 'laser-machine'] },
+  { id: 'laser-machine', title: 'Laser Machines', url: null, status: 'soon', color: '#6E7F86', group: 'Notes', note: 'Study notes on engraving lasers, samples and settings.', links: ['bare-stories', '3d-jewelry'] },
+  { id: 'moodboard', title: 'Moodboard', url: null, status: 'soon', color: '#8C7A92', group: 'Notes', note: 'Saved pictures and references, kept online.', links: ['bare-stories'] }
+];
+const ST = { live: 'Live', draft: 'Draft', soon: 'Soon' };
+const byId = Object.fromEntries(NOTES.map(n => [n.id, n]));
+// sidebar
+const tree = document.getElementById('tree');
+for (const g of ['Projects', 'Notes']) { const h = document.createElement('h4'); h.textContent = g; tree.append(h);
+  for (const n of NOTES.filter(n => n.group === g)) { const a = document.createElement('a'); if (n.url) a.href = n.url; a.innerHTML = `<span class="dot" style="background:${n.color}"></span>${n.title}<small>${ST[n.status]}</small>`; tree.append(a); } }
+// cards with their links
+const cards = document.getElementById('cards');
+for (const n of NOTES) { const el = document.createElement(n.url ? 'a' : 'div'); el.className = 'card' + (n.status === 'soon' ? ' soon' : ''); if (n.url) el.href = n.url;
+  const back = NOTES.filter(m => m.links.includes(n.id) && !n.links.includes(m.id)).map(m => m.id), all = [...n.links, ...back];
+  el.innerHTML = `<div class="t"><span class="dot" style="background:${n.color}"></span><b>${n.title}</b><span class="st ${n.status}">${ST[n.status]}</span></div><p>${n.note}</p>` + (all.length ? `<div class="links">${all.map(id => `<span>[[${byId[id].title}]]</span>`).join('')}</div>` : '');
+  cards.append(el); }
+document.getElementById('count').textContent = NOTES.length + ' notes';
+// graph: CC Notes in the middle, projects around it, lines where they link
+const svg = document.getElementById('graph'), NS = 'http://www.w3.org/2000/svg', E = (t, a) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
+const C = { x: 450, y: 165 }, P = {}; NOTES.forEach((n, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / NOTES.length; P[n.id] = { x: C.x + Math.cos(a) * 300, y: C.y + Math.sin(a) * 118 }; });
+const edges = []; const edge = (a, b, k) => { const p = P[a] || C, q = P[b]; const l = E('line', { x1: p.x, y1: p.y, x2: q.x, y2: q.y, class: 'edge' }); l.dataset.a = a; l.dataset.b = b; svg.append(l); edges.push(l); };
+NOTES.forEach(n => edge('hub', n.id)); const seen = new Set(); NOTES.forEach(n => n.links.forEach(m => { const k = [n.id, m].sort().join('|'); if (!seen.has(k)) { seen.add(k); edge(n.id, m); } }));
+const hub = E('g', {}); hub.append(E('circle', { cx: C.x, cy: C.y, r: 18, fill: '#24211E' })); const ht = E('text', { x: C.x, y: C.y + 4, 'text-anchor': 'middle', fill: '#F4F1EA', 'font-family': 'JetBrains Mono', 'font-size': 11 }); ht.textContent = 'cc'; hub.append(ht); svg.append(hub);
+for (const n of NOTES) { const p = P[n.id], g = E('g', { class: 'node' }); g.append(E('circle', { class: 'c', cx: p.x, cy: p.y, r: 10, fill: n.color, opacity: n.status === 'soon' ? .45 : 1 }));
+  const t = E('text', { x: p.x, y: p.y + 27, 'text-anchor': 'middle', class: 'lbl' }); t.textContent = n.title; g.append(t);
+  g.addEventListener('mouseenter', () => edges.forEach(l => l.classList.toggle('hot', l.dataset.a === n.id || l.dataset.b === n.id)));
+  g.addEventListener('mouseleave', () => edges.forEach(l => l.classList.remove('hot')));
+  g.addEventListener('click', () => { if (n.url) location.href = n.url; }); svg.append(g); }
+</script>
+</body>
+</html>
