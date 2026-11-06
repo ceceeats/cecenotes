@@ -20,3 +20,6 @@
 - Engraving moves clear of a window and re-fits when you change shape.
 - Padlock arch feet always stand on solid metal (crescent fix).
 - Number boxes read the same everywhere (no 0,45 vs 0.45); capitalised symbol names; Cut style label.
+
+## v21
+- Signet: lower half is an even band; from the sides the walls taper up in near-straight lines to the face (low pyramid), slimmer sides, less gold. Guide drawing updated.
