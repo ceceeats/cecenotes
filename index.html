@@ -6,105 +6,151 @@
 <meta name="robots" content="noindex,nofollow">
 <title>CC Notes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F4F1EA;--side:#ECE7DD;--card:#FBF9F4;--ink:#24211E;--soft:#6E675E;--faint:#A39B8F;--line:#DDD5C8;--acc:#5B63B7;--rust:#9A4A32;--live:#3F7D5A}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:400 14px/1.5 Inter,system-ui,sans-serif}
+:root{--bg:#F2F3F2;--paper:#F7F8F7;--ink:#121314;--soft:#5D6266;--faint:#A3A8AC;--rule:#D6D9DB;--grid:#E3E6E7;--cobalt:#2B57E8;--sky:#C7DAF7;--hot:#FF5A1F;
+  --mono:'Space Mono',ui-monospace,monospace;--sans:'Instrument Sans',system-ui,sans-serif;--serif:'Instrument Serif',Georgia,serif}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.45 var(--sans)}
 a{color:inherit}
-.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
-/* sidebar: the vault */
-.side{background:var(--side);border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto}
-.vault{display:flex;align-items:center;gap:8px;font:600 15px Fraunces,serif;margin:0 4px 18px}
-.vault i{width:22px;height:22px;border-radius:6px;background:var(--ink);display:grid;place-items:center;color:var(--bg);font:500 11px 'JetBrains Mono',monospace;font-style:normal}
-.tree h4{font:500 10.5px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:16px 6px 6px}
-.tree a{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;text-decoration:none;color:var(--soft);font-size:13.5px}
-.tree a:hover,.tree a.on{background:rgba(36,33,30,.06);color:var(--ink)}
-.tree a .dot{width:7px;height:7px;border-radius:50%;flex:none}
-.tree a small{margin-left:auto;font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.08em;color:var(--faint)}
-/* main */
-.main{padding:28px 32px 60px;max-width:1080px}
-.crumb{font:500 11px 'JetBrains Mono',monospace;color:var(--faint);letter-spacing:.06em}
-h1{font:600 40px/1.05 Fraunces,serif;margin:6px 0 4px;letter-spacing:-.01em}
-.lead{color:var(--soft);margin:0 0 22px;max-width:56ch}
-.graph{background:var(--card);border:1px solid var(--line);border-radius:14px;position:relative;overflow:hidden}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+/* top */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 0 14px;border-bottom:1px solid var(--rule)}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;font:700 13px var(--mono);letter-spacing:.06em}
+.logo svg{width:26px;height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.pills a{font:400 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border:1px solid var(--ink);border-radius:999px;padding:6px 11px}
+.pills a:hover{background:var(--ink);color:var(--bg)}.pills a.hot{background:var(--hot);border-color:var(--hot);color:#fff}
+/* intro */
+.intro{padding:26px 0;border-bottom:1px solid var(--rule)}
+.poster{position:relative;padding:clamp(18px,3vw,34px);background:#FBFBFA;box-shadow:0 1px 0 rgba(0,0,0,.04),0 18px 40px -24px rgba(20,30,40,.35)}
+.intro{background:repeating-linear-gradient(90deg,#D9DCDE 0 6px,#EEF0F1 6px 11px,#C9CDD0 11px 14px);padding:clamp(18px,4vw,46px);margin:18px 0 0;border:0}
+.ph{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;font:600 clamp(54px,11vw,150px)/.82 var(--sans);letter-spacing:-.055em;margin-bottom:18px}
+.ph .w2{align-self:flex-start;margin-top:.35em}.br{font:400 12px var(--mono);letter-spacing:0;color:var(--soft);align-self:center}
+.pb{display:grid;grid-template-columns:1.3fr 1fr;gap:26px;align-items:end}
+.serif{font:400 17px/1.3 var(--serif);text-align:justify;margin:0;color:#2A2D30}
+.tri{position:absolute;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid var(--ink)}.t1{top:14px;left:46%}.t2{bottom:16px;right:22%;transform:rotate(180deg)}
+.b2{position:absolute;right:16px;bottom:14px}
+.intro p.big{font:400 clamp(15px,1.75vw,22px)/1.2 var(--mono);text-transform:uppercase;letter-spacing:-.01em;margin:0}
+.intro .tag{margin-top:18px;font:400 clamp(26px,3.4vw,44px)/1.05 var(--sans);letter-spacing:-.02em}
+.intro .tag em{font:italic 400 1.08em/1 var(--serif);color:var(--cobalt)}
+/* section head */
+.sh{display:flex;align-items:baseline;justify-content:space-between;padding:22px 0 12px}
+.sh h2{margin:0;font:500 13px var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.sh span{font:400 11px var(--mono);color:var(--faint)}
+/* project tiles on a numbered specimen grid */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;padding-bottom:28px;border-bottom:1px solid var(--rule)}
+.tile{text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:8px}
+.tile .pic{position:relative;aspect-ratio:1/1;overflow:hidden;background:var(--c1)}
+.tile .pic::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--gl) 1px,transparent 1px),linear-gradient(90deg,var(--gl) 1px,transparent 1px);background-size:25% 25%;opacity:.9}
+.tile .pic .no{position:absolute;font:400 9px var(--mono);color:var(--gn);opacity:.9}
+.tile .pic svg.obj{position:absolute;left:50%;top:50%;width:46%;height:46%;transform:translate(-50%,-50%);transition:transform .35s ease}
+.tile:hover .pic svg.obj{transform:translate(-50%,-50%) rotate(-6deg) scale(1.06)}
+.tile .pic .name{position:absolute;left:0;right:0;bottom:12px;text-align:center;font:400 clamp(17px,1.9vw,22px)/1.05 var(--mono);text-transform:uppercase;color:var(--nc);letter-spacing:.02em}
+.tile .pic .st{position:absolute;top:10px;right:10px;font:400 9.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;border-radius:999px;padding:5px 8px;background:var(--bg);color:var(--ink)}
+.tile .pic .st.live{background:var(--hot);color:#fff}
+.tile .cap{display:grid;grid-template-columns:18px 1fr;gap:6px;font:400 11.5px/1.35 var(--mono)}
+.tile .cap b{font-weight:400;color:var(--faint)}
+.tile .links{display:flex;flex-wrap:wrap;gap:5px;padding-left:24px}
+.tile .links span{font:400 10px var(--mono);color:var(--cobalt);border:1px solid var(--sky);border-radius:999px;padding:3px 8px;background:#fff}
+.tile.soon .pic{filter:grayscale(.6);opacity:.75}
+@media (min-width:1000px){.tiles{grid-template-columns:repeat(5,1fr)}}
+/* graph on the specimen grid */
+.graph{position:relative;background:var(--paper);border:1px solid var(--rule);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:calc(100%/12) calc(100%/5)}
 .graph svg{display:block;width:100%;height:auto}
-.graph .lbl{font:500 15px Inter,sans-serif;fill:var(--ink)}@media (max-width:760px){.graph .lbl{font-size:22px}}
-.graph .edge{stroke:#C9C0B2;stroke-width:1.2;transition:stroke .15s,stroke-width .15s}
-.graph .edge.hot{stroke:var(--acc);stroke-width:2}
+.graph .edge{stroke:#B9C0C6;stroke-width:1.2;transition:stroke .15s}
+.graph .edge.hot{stroke:var(--cobalt);stroke-width:2.2}
+.graph .lbl{font:400 15px var(--mono);text-transform:uppercase;fill:var(--ink)}
 .graph .node{cursor:pointer}
-.graph .node circle{transition:r .15s}
-.graph .node:hover circle.c{r:13}
-.gcap{position:absolute;left:14px;top:10px;font:500 10.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--faint);text-transform:uppercase}
-.sec{display:flex;align-items:baseline;justify-content:space-between;margin:28px 0 10px}
-.sec h2{font:600 22px Fraunces,serif;margin:0}
-.sec span{font:500 11px 'JetBrains Mono',monospace;color:var(--faint)}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}
-a.card:hover{border-color:var(--acc);transform:translateY(-1px)}
-.card .t{display:flex;align-items:center;gap:8px}.card .t b{font:600 18px Fraunces,serif}
-.card .t .dot{width:9px;height:9px;border-radius:50%}
-.card p{margin:0;color:var(--soft);font-size:13px}
-.st{margin-left:auto;font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border-radius:999px;border:1px solid currentColor}
-.st.live{color:var(--live)}.st.draft{color:var(--rust)}.st.soon{color:var(--faint)}
-.links{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
-.links a,.links span{font:500 11px 'JetBrains Mono',monospace;color:var(--acc);text-decoration:none;background:rgba(91,99,183,.08);padding:2px 7px;border-radius:5px}
-.links a:hover{background:rgba(91,99,183,.16)}
-.card.soon{opacity:.62}
-.foot{margin-top:34px;font:500 11px 'JetBrains Mono',monospace;color:var(--faint)}
-@media (max-width:760px){.app{grid-template-columns:1fr}.side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:14px 16px 8px}
- .tree{display:flex;flex-wrap:wrap;gap:4px}.tree h4{display:none}.tree a{padding:5px 9px;background:rgba(36,33,30,.04);font-size:12.5px}.tree a small{display:none}.vault{margin-bottom:10px}
- .main{padding:18px 16px 40px}h1{font-size:32px}.cards{grid-template-columns:1fr}}
+/* numbered notes, three columns */
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 28px;padding:24px 0 30px;border-bottom:1px solid var(--rule)}
+.nums div{font:400 12px/1.4 var(--mono)}.nums b{display:block;font-weight:400;color:var(--faint);margin-bottom:2px}
+.foot{display:flex;justify-content:space-between;align-items:center;padding:18px 0 40px;font:400 10.5px var(--mono);color:var(--faint);text-transform:uppercase;letter-spacing:.05em}
+.foot svg{width:54px;height:54px;color:var(--ink);opacity:.75}
+@media (max-width:720px){.pb{grid-template-columns:1fr;gap:12px}.intro{margin:12px -16px 0;padding:16px}.t1{left:70%}
+ .wrap{padding:0 16px}.top{flex-direction:column;align-items:flex-start}.pills{justify-content:flex-start}
+ .intro{padding:24px 0 22px}.tiles{grid-template-columns:1fr 1fr;gap:10px}.tile .pic .name{font-size:14px;bottom:8px}.tile .cap{font-size:10.5px}.tile .links{padding-left:0}
+ .nums{grid-template-columns:1fr 1fr;gap:10px 14px}.nums div{font-size:11px}
+ .tile:last-child:nth-child(odd){grid-column:1/-1}.tile:last-child:nth-child(odd) .pic{aspect-ratio:2/1}.tile:last-child:nth-child(odd) .pic svg.obj{width:24%}.graph .lbl{font-size:24px}}
 </style>
 </head>
 <body>
-<div class="app">
-<aside class="side">
-  <div class="vault"><i>cc</i>CC Notes</div>
-  <nav class="tree" id="tree"></nav>
-</aside>
-<main class="main">
-  <div class="crumb">cecenotes.co / projects</div>
-  <h1>Projects</h1>
-  <p class="lead">Everything in one place. Each project links to the notes around it, the way the threads actually connect.</p>
-  <div class="graph"><span class="gcap">Graph</span><svg id="graph" viewBox="0 0 900 330" role="img" aria-label="How the projects link to each other"></svg></div>
-  <div class="sec"><h2>All projects</h2><span id="count"></span></div>
-  <div class="cards" id="cards"></div>
-  <p class="foot">Private notes. Not indexed by search engines.</p>
-</main>
+<div class="wrap">
+<header class="top">
+  <a class="logo" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><g fill="#2B57E8"><path d="M16 2l3.2 8.6L16 15l-3.2-4.4z"/><path d="M28.1 23l-9-1.5L16 15l5.4.6z"/><path d="M3.9 23l5.7-7 6.4-1-3 6.5z"/></g></svg>CC NOTES</a>
+  <nav class="pills" id="pills"></nav>
+</header>
+
+<section class="intro">
+  <div class="poster">
+    <div class="ph"><span class="w1">CC</span><span class="br">[2026]</span><span class="w2">NOTES</span></div>
+    <div class="pb">
+      <p class="big">I keep everything I am building here. Brands, tools, studies and the pictures that started them.</p>
+      <p class="serif">Each project links to the ones it grew out of. Nothing is finished; it is a working archive, kept in the open for myself and the people I build with.</p>
+    </div>
+    <p class="tag">Notes, projects and <em>the threads between them.</em></p>
+    <span class="tri t1"></span><span class="tri t2"></span><span class="br b2">{05}</span>
+  </div>
+</section>
+
+<div class="sh"><h2>Projects</h2><span id="count"></span></div>
+<div class="tiles" id="tiles"></div>
+
+<div class="sh"><h2>Graph</h2><span>hover a dot to see its links</span></div>
+<div class="graph"><svg id="graph" viewBox="0 0 960 400" role="img" aria-label="How the projects link"></svg></div>
+
+<div class="sh"><h2>Threads</h2><span>how they connect</span></div>
+<div class="nums" id="nums"></div>
+
+<footer class="foot"><span>Private notes · not indexed</span>
+  <svg viewBox="0 0 60 60" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1"><g id="tick"></g><path d="M30 30L20 16M30 30l14 6" stroke-width="1.4"/></svg></footer>
 </div>
 <script>
-// To add a project: add one line here. "links" are the ids it connects to.
+// To add a project: one line. c1 = tile colour, gl = grid lines, gn = grid numbers, nc = name colour, obj = the drawn object.
+const OBJ = {
+  vial: '<g fill="none" stroke="currentColor" stroke-width="2.2"><rect x="34" y="18" width="32" height="12" rx="3"/><path d="M38 30v52a8 8 0 0 0 8 8h8a8 8 0 0 0 8-8V30"/><path d="M38 58h24" opacity=".6"/></g>',
+  tag: '<g fill="none" stroke="currentColor" stroke-width="2.2"><path d="M50 92C34 80 18 64 17 43C16 27 27 17 38 18C45 19 49 26 50 36C51 26 56 18 63 17C75 17 85 27 84 43C83 64 66 80 50 92Z"/><ellipse cx="50" cy="12" rx="5" ry="8"/></g>',
+  cube: '<g fill="none" stroke="currentColor" stroke-width="2.2"><path d="M50 10L86 30V70L50 90L14 70V30Z"/><path d="M14 30L50 50L86 30M50 50V90"/></g>',
+  laser: '<g fill="none" stroke="currentColor" stroke-width="2.2"><rect x="14" y="62" width="72" height="20" rx="3"/><path d="M34 62V30h32v32M50 30V10"/><path d="M50 62v-8" stroke-dasharray="3 3"/></g>',
+  frames: '<g fill="none" stroke="currentColor" stroke-width="2.2"><rect x="12" y="14" width="34" height="42"/><rect x="54" y="14" width="34" height="26"/><rect x="54" y="48" width="34" height="38"/><rect x="12" y="64" width="34" height="22"/></g>'
+};
 const NOTES = [
-  { id: 'bare-signals', title: 'Bare Signals', url: 'https://baresignals.co', status: 'live', color: '#5B63B7', group: 'Projects', note: 'Peptide and compound library, guides and cases.', links: [] },
-  { id: 'bare-stories', title: 'Bare Stories', url: '/bare-stories/', status: 'draft', color: '#9A4A32', group: 'Projects', note: 'Jewelry brand website. Engraved gold and silver, made in Bali.', links: ['3d-jewelry', 'laser-machine', 'moodboard'] },
-  { id: '3d-jewelry', title: '3D Jewelry', url: '/3d-jewelry/', status: 'draft', color: '#B08A3E', group: 'Projects', note: 'Pendant Lab: charms, pendants and signets in 3D, chains and try-on.', links: ['bare-stories', 'laser-machine'] },
-  { id: 'laser-machine', title: 'Laser Machines', url: null, status: 'soon', color: '#6E7F86', group: 'Notes', note: 'Study notes on engraving lasers, samples and settings.', links: ['bare-stories', '3d-jewelry'] },
-  { id: 'moodboard', title: 'Moodboard', url: null, status: 'soon', color: '#8C7A92', group: 'Notes', note: 'Saved pictures and references, kept online.', links: ['bare-stories'] }
+  { id: 'bare-signals', title: 'Bare Signals', url: 'https://baresignals.co', status: 'live', note: 'Peptide and compound library, guides and cases.', links: ['3d-jewelry'], obj: 'vial', c1: '#D9DCF4', gl: 'rgba(91,99,183,.18)', gn: '#5B63B7', nc: '#2E3592', oc: '#5B63B7' },
+  { id: 'bare-stories', title: 'Bare Stories', url: '/bare-stories/', status: 'draft', note: 'Jewelry brand site. Engraved gold and silver, made in Bali.', links: ['3d-jewelry', 'laser-machine', 'moodboard'], obj: 'tag', c1: '#6F8096', gl: 'rgba(255,255,255,.16)', gn: '#E9EEF4', nc: '#FFFFFF', oc: '#E8C77E' },
+  { id: '3d-jewelry', title: '3D Jewelry', url: '/3d-jewelry/', status: 'draft', note: 'Pendant Lab. Charms, pendants and signets in 3D, chains and try-on.', links: ['bare-stories', 'laser-machine'], obj: 'cube', c1: '#E4E7E9', gl: 'rgba(18,19,20,.08)', gn: '#8C9297', nc: '#121314', oc: '#B8892E' },
+  { id: 'laser-machine', title: 'Laser Machines', url: null, status: 'soon', note: 'Study notes on engraving lasers, samples and settings.', links: ['bare-stories', '3d-jewelry'], obj: 'laser', c1: '#C7DAF7', gl: 'rgba(43,87,232,.14)', gn: '#2B57E8', nc: '#123', oc: '#2B57E8' },
+  { id: 'moodboard', title: 'Moodboard', url: null, status: 'soon', note: 'Saved pictures and references, kept online.', links: ['bare-stories'], obj: 'frames', c1: '#DCE3DD', gl: 'rgba(18,19,20,.08)', gn: '#7A8A7E', nc: '#1F2A22', oc: '#47614E' }
 ];
-const ST = { live: 'Live', draft: 'Draft', soon: 'Soon' };
-const byId = Object.fromEntries(NOTES.map(n => [n.id, n]));
-// sidebar
-const tree = document.getElementById('tree');
-for (const g of ['Projects', 'Notes']) { const h = document.createElement('h4'); h.textContent = g; tree.append(h);
-  for (const n of NOTES.filter(n => n.group === g)) { const a = document.createElement('a'); if (n.url) a.href = n.url; a.innerHTML = `<span class="dot" style="background:${n.color}"></span>${n.title}<small>${ST[n.status]}</small>`; tree.append(a); } }
-// cards with their links
-const cards = document.getElementById('cards');
-for (const n of NOTES) { const el = document.createElement(n.url ? 'a' : 'div'); el.className = 'card' + (n.status === 'soon' ? ' soon' : ''); if (n.url) el.href = n.url;
-  const back = NOTES.filter(m => m.links.includes(n.id) && !n.links.includes(m.id)).map(m => m.id), all = [...n.links, ...back];
-  el.innerHTML = `<div class="t"><span class="dot" style="background:${n.color}"></span><b>${n.title}</b><span class="st ${n.status}">${ST[n.status]}</span></div><p>${n.note}</p>` + (all.length ? `<div class="links">${all.map(id => `<span>[[${byId[id].title}]]</span>`).join('')}</div>` : '');
-  cards.append(el); }
-document.getElementById('count').textContent = NOTES.length + ' notes';
-// graph: CC Notes in the middle, projects around it, lines where they link
-const svg = document.getElementById('graph'), NS = 'http://www.w3.org/2000/svg', E = (t, a) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
-const C = { x: 450, y: 165 }, P = {}; NOTES.forEach((n, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / NOTES.length; P[n.id] = { x: C.x + Math.cos(a) * 300, y: C.y + Math.sin(a) * 118 }; });
-const edges = []; const edge = (a, b, k) => { const p = P[a] || C, q = P[b]; const l = E('line', { x1: p.x, y1: p.y, x2: q.x, y2: q.y, class: 'edge' }); l.dataset.a = a; l.dataset.b = b; svg.append(l); edges.push(l); };
-NOTES.forEach(n => edge('hub', n.id)); const seen = new Set(); NOTES.forEach(n => n.links.forEach(m => { const k = [n.id, m].sort().join('|'); if (!seen.has(k)) { seen.add(k); edge(n.id, m); } }));
-const hub = E('g', {}); hub.append(E('circle', { cx: C.x, cy: C.y, r: 18, fill: '#24211E' })); const ht = E('text', { x: C.x, y: C.y + 4, 'text-anchor': 'middle', fill: '#F4F1EA', 'font-family': 'JetBrains Mono', 'font-size': 11 }); ht.textContent = 'cc'; hub.append(ht); svg.append(hub);
-for (const n of NOTES) { const p = P[n.id], g = E('g', { class: 'node' }); g.append(E('circle', { class: 'c', cx: p.x, cy: p.y, r: 10, fill: n.color, opacity: n.status === 'soon' ? .45 : 1 }));
-  const t = E('text', { x: p.x, y: p.y + 27, 'text-anchor': 'middle', class: 'lbl' }); t.textContent = n.title; g.append(t);
-  g.addEventListener('mouseenter', () => edges.forEach(l => l.classList.toggle('hot', l.dataset.a === n.id || l.dataset.b === n.id)));
-  g.addEventListener('mouseleave', () => edges.forEach(l => l.classList.remove('hot')));
-  g.addEventListener('click', () => { if (n.url) location.href = n.url; }); svg.append(g); }
+const ST = { live: 'Live', draft: 'Draft', soon: 'Soon' }, byId = Object.fromEntries(NOTES.map(n => [n.id, n])), L = 'ABCDEFGHIJ';
+const linksOf = n => [...new Set([...n.links, ...NOTES.filter(m => m.links.includes(n.id)).map(m => m.id)])];
+// pills
+const pills = document.getElementById('pills');
+for (const n of NOTES) { const a = document.createElement('a'); a.textContent = n.title; if (n.url) a.href = n.url; else a.style.opacity = .45; if (n.status === 'live') a.className = 'hot'; pills.append(a); }
+// tiles
+const tiles = document.getElementById('tiles');
+NOTES.forEach((n, i) => { const el = document.createElement(n.url ? 'a' : 'div'); el.className = 'tile' + (n.status === 'soon' ? ' soon' : ''); if (n.url) el.href = n.url;
+  el.style.cssText = `--c1:${n.c1};--gl:${n.gl};--gn:${n.gn};--nc:${n.nc}`;
+  let nos = ''; for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) nos += `<span class="no" style="left:${c * 25 + 1.2}%;top:${r * 25 + 1.5}%">${String(r * 4 + c + 1).padStart(2, '0')}</span>`;
+  el.innerHTML = `<div class="pic">${nos}<svg class="obj" viewBox="0 0 100 100" style="color:${n.oc}">${OBJ[n.obj]}</svg><span class="st ${n.status}">${ST[n.status]}</span><span class="name">${n.title}</span></div>
+    <div class="cap"><b>${L[i]}</b><span>${n.note}</span></div>` + `<div class="links">${linksOf(n).map(id => `<span>[[${byId[id].title}]]</span>`).join('')}</div>`;
+  tiles.append(el); });
+document.getElementById('count').textContent = String(NOTES.length).padStart(2, '0') + ' notes';
+// threads: one numbered line per link
+const nums = document.getElementById('nums'), seen = new Set(); let k = 0;
+for (const n of NOTES) for (const m of n.links) { const key = [n.id, m].sort().join('|'); if (seen.has(key)) continue; seen.add(key);
+  const d = document.createElement('div'); d.innerHTML = `<b>${String(++k).padStart(2, '0')}</b>${n.title} ↔ ${byId[m].title}`; nums.append(d); }
+// graph
+const svg = document.getElementById('graph'), NS = 'http://www.w3.org/2000/svg', E = (t, a) => { const e = document.createElementNS(NS, t); for (const x in a) e.setAttribute(x, a[x]); return e; };
+const C = { x: 480, y: 200 }, P = {}; NOTES.forEach((n, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / NOTES.length; P[n.id] = { x: C.x + Math.cos(a) * 330, y: C.y + Math.sin(a) * 140 }; });
+const edges = [], line = (a, b) => { const p = a === 'hub' ? C : P[a], q = P[b], l = E('line', { x1: p.x, y1: p.y, x2: q.x, y2: q.y, class: 'edge' }); l.dataset.a = a; l.dataset.b = b; svg.append(l); edges.push(l);
+  if (a !== 'hub') { const mx = (p.x + q.x) / 2, my = (p.y + q.y) / 2, ang = Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI + 90; svg.append(E('path', { d: 'M-5 4L5 4L0 -5Z', transform: `translate(${mx} ${my}) rotate(${ang})`, fill: '#121314' })); } };
+NOTES.forEach(n => line('hub', n.id)); seen.forEach(key => { const [a, b] = key.split('|'); line(a, b); });
+svg.append(E('circle', { cx: C.x, cy: C.y, r: 16, fill: '#2B57E8' })); const ht = E('text', { x: C.x, y: C.y + 4, 'text-anchor': 'middle', fill: '#fff', 'font-family': 'Space Mono', 'font-size': 11 }); ht.textContent = 'cc'; svg.append(ht);
+for (const n of NOTES) { const p = P[n.id], g = E('g', { class: 'node' }); g.append(E('circle', { cx: p.x, cy: p.y, r: 11, fill: n.status === 'live' ? '#FF5A1F' : n.oc, stroke: '#121314', 'stroke-width': 1, opacity: n.status === 'soon' ? .5 : 1 }));
+  const t = E('text', { x: p.x, y: p.y + 32, 'text-anchor': 'middle', class: 'lbl' }); t.textContent = n.title; g.append(t);
+  g.onmouseenter = () => edges.forEach(l => l.classList.toggle('hot', l.dataset.a === n.id || l.dataset.b === n.id)); g.onmouseleave = () => edges.forEach(l => l.classList.remove('hot'));
+  g.onclick = () => { if (n.url) location.href = n.url; }; svg.append(g); }
+// little clock in the footer
+const tk = document.getElementById('tick'); for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; tk.append(E('line', { x1: 30 + Math.cos(a) * 22, y1: 30 + Math.sin(a) * 22, x2: 30 + Math.cos(a) * 27, y2: 30 + Math.sin(a) * 27 })); }
 </script>
 </body>
 </html>
