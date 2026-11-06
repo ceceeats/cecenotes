@@ -8,3 +8,8 @@
 - v15: tight fused join back, flat loop default, 0.4 wire for charms, tab and button icons, ring shape pictures.
 - v14: the 20 catalogue chains with physical hanging (passes, hooks through one link, or can't hang), Swing mode, Organic on/off. (v14 was updated in place once.)
 - v2 to v13: earlier builds (grid editing, 3D, signets, try-on, fit check).
+
+## v19
+- Signet rebuilt as one solid: true round inside, outer wall thickens from bottom to face, face flares into the shoulders.
+- Every control panel laid out in labelled columns (laptop), stacked sections on phone.
+- Signet guide drawing; shorter labels.
