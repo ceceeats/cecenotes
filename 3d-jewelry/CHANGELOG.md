@@ -13,3 +13,10 @@
 - Signet rebuilt as one solid: true round inside, outer wall thickens from bottom to face, face flares into the shoulders.
 - Every control panel laid out in labelled columns (laptop), stacked sections on phone.
 - Signet guide drawing; shorter labels.
+
+## v20
+- Phone: size note folds into a Sizes button; five measurements on one line.
+- Picking a shape keeps your chosen size (a 4 mm charm stays 4 mm).
+- Engraving moves clear of a window and re-fits when you change shape.
+- Padlock arch feet always stand on solid metal (crescent fix).
+- Number boxes read the same everywhere (no 0,45 vs 0.45); capitalised symbol names; Cut style label.
