@@ -36,3 +36,7 @@
 - Catalogue pieces carry the details from their pictures: the sun's raised centre disc and ray ridges, the fish's gill line, eye, scales and tail lines, the star's ridges, heart clefts, the flower's petal domes and grooves, butterfly wing lines, the shell's ribs from the hinge, the eye's inner almond line with milgrain, the tilted heart's bead cluster, a fine snow texture on the pebbles.
 - Gentle curves taken from the side views (evil eye, shell, butterfly); the classic puffy heart (D011) redrawn smooth; organic outlines softened a little, sharp points kept sharp.
 - Stones show facets. v22 stays live as it was.
+
+## v24
+- Turned 90° rings now fuse as smoothly as front-facing ones: the edge rises into a small round knuckle under the ring (cast the same way as the front loop), and the 3D fillet follows the real surface (relief, texture, bend) and stays only where ring meets metal, so no web between the ring's legs, no seam and no torn edges.
+- v23 stays live as it was.
