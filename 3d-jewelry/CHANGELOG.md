@@ -30,3 +30,9 @@
 - New Sheet tab in catalogue mode: what the sheet says, a live check (height, width, thickness, stone, weight) and stone colours.
 - The catalogue lives on its own in /3d-jewelry/catalog/ (catalog.js + pieces.js). Delete that folder and the Catalogue button disappears; nothing else changes.
 - Small lab changes: ring opening down to 0.8 mm, thickness down to 0.5 mm, wide pieces stay in frame on a phone.
+
+## v23
+- No more black metal: a bright studio light replaces the dark room, so polished silver reads as silver and gold as gold (Charm, Pendant, Signet and Catalogue). Matte is a touch brighter.
+- Catalogue pieces carry the details from their pictures: the sun's raised centre disc and ray ridges, the fish's gill line, eye, scales and tail lines, the star's ridges, heart clefts, the flower's petal domes and grooves, butterfly wing lines, the shell's ribs from the hinge, the eye's inner almond line with milgrain, the tilted heart's bead cluster, a fine snow texture on the pebbles.
+- Gentle curves taken from the side views (evil eye, shell, butterfly); the classic puffy heart (D011) redrawn smooth; organic outlines softened a little, sharp points kept sharp.
+- Stones show facets. v22 stays live as it was.

@@ -4,7 +4,7 @@
 import { PIECES } from './pieces.js';
 
 const STONE = {
-  labd: ['Lab diamond', '#F3F6F9'], wtop: ['White topaz', '#EAF0F5'], pcz: ['Pink CZ', '#F2A2C3'],
+  labd: ['Lab diamond', '#E6EDF3'], wtop: ['White topaz', '#E0E7EE'], pcz: ['Pink CZ', '#F2A2C3'],
   garnet: ['Garnet', '#6E0F1E'], amethyst: ['Amethyst', '#8A4DB3'], skyt: ['Sky blue topaz', '#A3D2EE'], emerald: ['Emerald', '#1E8A57'],
   pinks: ['Pink sapphire', '#EE8BB4'], ruby: ['Ruby', '#B80F37'], peridot: ['Peridot', '#9BC23C'], citrine: ['Citrine', '#F0AE2E'],
   rhodo: ['Rhodolite', '#A8386A'], blues: ['Blue sapphire', '#1E4CAD'], swiss: ['Swiss blue topaz', '#2BA3D8']
@@ -25,9 +25,9 @@ export function install(L) {
     const T = p.t, d = p.depth || (p.style === 'flat'
       ? { thick: T, puff: 0, edgeR: Math.min(0.35, T * 0.3), edgeShape: 0.9, side: T * 0.35, back: 'flat' }
       : { thick: T * 0.5, puff: T * 0.25, edgeR: Math.min(1.6, small * 0.14, T * 0.45), edgeShape: 1, side: 0, back: 'puff' });
-    const extra = { soften: 0.06, cornerR: 0.12, wobble: 0, tilt: 0, metal: p.metal, finish: p.finish, chain: p.chain, beadMode: 'off', ribs: 0, winType: 'none', archOn: false, rimOn: false, frameOn: false,
+    const extra = { soften: p.soft ?? 0.1, cornerR: 0.12, wobble: 0, tilt: 0, metal: p.metal, finish: p.finish, chain: p.chain, beadMode: 'off', ribs: 0, winType: 'none', archOn: false, rimOn: false, frameOn: false,
       ...(r ? { ringShape: r.shape, ringSit: r.sit, ringID: r.id, wire: r.wire, ringRatio: r.ratio || 1.3, ringProf: 'round', neckH: r.neck ?? 0.6, neckW: 1.0, attach: r.attach || 'grow', ringAt: r.at.slice() } : { ringShape: 'none' }),
-      hamOn: !!p.ham, ...(p.ham || {}), ...(p.ribs ? { ribs: p.ribs.ribs, ribD: p.ribs.ribD } : {}), ...d };
+      hamOn: !!p.ham, ...(p.ham || {}), ...(p.ribs ? { ribs: p.ribs.ribs, ribD: p.ribs.ribD } : {}), ...(p.rim || {}), ...d };
     SHAPE[keyOf(p.id)] = { name: p.id + ' ' + p.name, style: p.style, sym: p.sym, pts: p.pts.map(([x, y, c]) => ({ x, y, c: !!c })), extra, cat: p };
   }
   const groups = {}; for (const p of PIECES) (groups[GROUP_OF[p.kind] || 'Other'] = groups[GROUP_OF[p.kind] || 'Other'] || []).push([keyOf(p.id), p.id + ' ' + p.name]);
@@ -114,8 +114,34 @@ export function install(L) {
     $('catCheck').innerHTML = html;
   };
 
+  // ---------- 4a. surface detail read off each picture: raised discs, grooves, ridges, scales, a gentle bend ----------
+  const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const segD = (px, py, a, b) => { const ex = b[0] - a[0], ey = b[1] - a[1], l2 = ex * ex + ey * ey || 1e-9; let t = ((px - a[0]) * ex + (py - a[1]) * ey) / l2; const tc = Math.min(1, Math.max(0, t)); return [Math.hypot(a[0] + tc * ex - px, a[1] + tc * ey - py), t]; };
+  const vesicaSD = (x, y, H, W) => { const s0 = W / 2, h = H / 2, R0 = (s0 * s0 + h * h) / (2 * s0), c = s0 - R0; return Math.max(Math.hypot(x - c, y) - R0, Math.hypot(x + c, y) - R0); };
+  const compile = ops => ops.map(o => {
+    if (o.t === 'groove' || o.t === 'ridge') { const amt = o.t === 'groove' ? -o.d : o.h; return (x, y) => { const [dd, t] = segD(x, y, o.a, o.b); const end = sm(-0.15, 0.12, t) * (1 - sm(0.85, 1.1, t)); if (o.taper) { const tt = Math.min(1, Math.max(0, t)); return amt * Math.pow(1 - tt, 1.4) * (1 - sm(0, o.w * (1 - 0.65 * tt), dd)) * sm(-0.1, 0.05, t); } // a cleft: wide and deeper at the top, fading to nothing
+      return amt * (1 - sm(0, o.w, dd)) * (o.t === 'groove' ? Math.max(end, 0.35) : end); }; }
+    if (o.t === 'plateau') return (x, y) => o.h * (1 - sm(o.r - o.e, o.r + o.e, Math.hypot(x - o.c[0], y - o.c[1])));
+    if (o.t === 'dome') return (x, y) => { const r = Math.hypot(x - o.c[0], y - o.c[1]) / o.r; return r < 1 ? o.h * (1 - r * r) : 0; };
+    if (o.t === 'dimple') return (x, y) => -o.d * (1 - sm(0, o.r, Math.hypot(x - o.c[0], y - o.c[1])));
+    if (o.t === 'ringg') return (x, y) => -o.d * (1 - sm(0, o.w, Math.abs(Math.hypot(x - o.c[0], y - o.c[1]) - o.r)));
+    if (o.t === 'arc') return (x, y) => y > o.c[1] - 0.2 ? 0 : -o.d * (1 - sm(0, o.w, Math.abs(Math.hypot(x - o.c[0], y - o.c[1]) - o.r))) * sm(o.c[1] - 0.2, o.c[1] - 0.6, y);
+    if (o.t === 'vesicaRidge') return (x, y) => o.h * (1 - sm(0, o.w, Math.abs(vesicaSD(x, y, o.H, o.W))));
+    if (o.t === 'scales') return (x, y) => { if (y < o.y0 || y > o.y1) return 0; const s2 = o.s, row = Math.floor(y / (s2 * 0.62)), u = x / s2 + (row % 2 ? 0.5 : 0), fu = u - Math.floor(u) - 0.5, fv = y / (s2 * 0.62) - row; // overlapping half-round scales
+      const dd = Math.abs(Math.hypot(fu * s2, (fv - 1) * s2 * 0.62 * 1.4) - s2 * 0.5); return -o.d * (1 - sm(0, o.w, dd)) * sm(o.y0, o.y0 + 0.4, y) * (1 - sm(o.y1 - 0.4, o.y1, y)); };
+    return () => 0; });
+  const sheetBox = id => { const s0 = SHAPE[keyOf(id)]; return bboxOf(fullOf(s0)); };
+  L.hooks.beforeBody = ({ v, O }) => {
+    v.relT = null; v.bendF = null; if (S.kind !== 'catalog' || !S.cat) return; const p = byId[S.cat];
+    const a = sheetBox(p.id), b = bboxOf(fullOf({ sym: S.sym, pts: S.pts })), kx = b.w / a.w, ky = b.h / a.h, k = Math.sqrt(kx * ky);
+    const c0 = [(b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2], ca = [(a.x0 + a.x1) / 2, (a.y0 + a.y1) / 2], an = O.anU || [0, 0], th = -(v.tilt || 0) * Math.PI / 180;
+    const toSheet = (x, y) => { if (th) { const dx = x - an[0], dy = y - an[1]; x = an[0] + dx * Math.cos(th) - dy * Math.sin(th); y = an[1] + dx * Math.sin(th) + dy * Math.cos(th); } return [ca[0] + (x - c0[0]) / kx, ca[1] + (y - c0[1]) / ky]; };
+    if (p.relief && p.relief.length) { const fs = compile(p.relief); v.relT = (x, y, d) => { const [X, Y] = toSheet(x, y); let z = 0; for (const f of fs) z += f(X, Y); return z * k * sm(0.06, 0.4, d); }; }
+    if (p.bend) { const hx = a.w / 2, hy = a.h / 2; v.bendF = (x, y) => { const [X, Y] = toSheet(x, y); return -k * ((p.bend.sx || 0) * ((X - ca[0]) / hx) ** 2 + (p.bend.sy || 0) * ((Y - ca[1]) / hy) ** 2); }; }
+  };
+
   // ---------- 4. stones and settings, built after the body each time ----------
-  const gemMats = {}; const gemMat = c => gemMats[c] || (gemMats[c] = new THREE.MeshPhysicalMaterial({ color: STONE[c] ? STONE[c][1] : '#eee', metalness: 0.35, roughness: 0.06, clearcoat: 1, clearcoatRoughness: 0, ior: 2.2, envMapIntensity: 1.6, flatShading: true }));
+  const gemMats = {}; const gemMat = c => gemMats[c] || (gemMats[c] = new THREE.MeshPhysicalMaterial({ color: STONE[c] ? STONE[c][1] : '#eee', metalness: 0.55, roughness: 0.02, clearcoat: 1, clearcoatRoughness: 0, iridescence: 0.3, envMapIntensity: 1.8, flatShading: true }));
   const darkMat = new THREE.MeshBasicMaterial({ color: 0x3B2A22, transparent: true, opacity: 0.55, side: THREE.DoubleSide });
   const V2 = (x, y) => new THREE.Vector2(x, y);
   const lathe = (prof, seg, phi = 0) => { const g = new THREE.LatheGeometry(prof.map(([r, z]) => V2(r, z)), seg, phi); g.rotateX(Math.PI / 2); return g; }; // lathe stands on y; turn it so it stands on z
@@ -148,6 +174,11 @@ export function install(L) {
     }
     if (p.milgrain && L.isoLoop) { try { const lp = L.isoLoop(O.base, p.milgrain), br = 0.085; let acc = 0, prev = lp[lp.length - 1];
       for (const q of lp) { acc += Math.hypot(q[0] - prev[0], q[1] - prev[1]); prev = q; if (acc < 0.22) continue; acc = 0; add(ball(q[0], q[1], topAt(q[0], q[1]) - br * 0.25, br)); } } catch (e) {} }
+    { const a = sheetBox(p.id), b = bboxOf(fullOf({ sym: S.sym, pts: S.pts })), kx = b.w / a.w, ky = b.h / a.h, c0 = [(b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2], ca = [(a.x0 + a.x1) / 2, (a.y0 + a.y1) / 2];
+      const here = (X, Y) => rotAbout(c0[0] + (X - ca[0]) * kx, c0[1] + (Y - ca[1]) * ky, O.anU || [0, 0], v.tilt || 0), k = Math.sqrt(kx * ky);
+      if (p.milgrainV) { const { H, W } = p.milgrainV, s0 = W / 2, h = H / 2, R0 = (s0 * s0 + h * h) / (2 * s0), c = s0 - R0, a0 = Math.asin(h / R0), br = 0.075 * k; // beads along the inner eye line
+        for (const sg of [1, -1]) for (let t = -a0 + 0.05; t <= a0 - 0.05; t += 0.17 / R0) { const [x, y] = here(sg * (c + R0 * Math.cos(t)), R0 * Math.sin(t)); add(ball(x, y, topAt(x, y) - br * 0.2, br)); } }
+      for (const [bx, by, bd] of p.beads || []) { const [x, y] = here(bx, by); add(ball(x, y, topAt(x, y) + bd * 0.1, bd * k / 2)); } }
     ext = { w: ex.x1 - ex.x0, h: ex.y1 - ex.y0 };
   };
   L.hooks.grid = ({ svg, el, ink }) => {
