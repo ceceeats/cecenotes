@@ -23,3 +23,10 @@
 
 ## v21
 - Signet: lower half is an even band; from the sides the walls taper up in near-straight lines to the face (low pyramid), slimmer sides, less gold. Guide drawing updated.
+
+## v22
+- Catalogue: a 4th mode button next to Charm, Pendant and Signet ring. 23 factory design pieces (D001 to D023), traced from each sheet's front view, scaled to the printed mm, thickness from the side view, with their own bail, second loops, stones and settings (star, bezel, channel, ball prongs, milgrain).
+- Every catalogue piece works with the normal tools: size, ring size and wire, faces front or turned, chain, metal, finish, try-on. Reset says "Reset to catalogue" and puts the sheet back.
+- New Sheet tab in catalogue mode: what the sheet says, a live check (height, width, thickness, stone, weight) and stone colours.
+- The catalogue lives on its own in /3d-jewelry/catalog/ (catalog.js + pieces.js). Delete that folder and the Catalogue button disappears; nothing else changes.
+- Small lab changes: ring opening down to 0.8 mm, thickness down to 0.5 mm, wide pieces stay in frame on a phone.
